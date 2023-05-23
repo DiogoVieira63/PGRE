@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1.w3-center Register
+  .w3-card-4.w3-content.w3-padding.w3-margin-top
+    form.w3-form(action='register', method='POST')
+      div
+        label(for='username') 
+        b Username
+        input.w3-input(type='text', name='username')
+      div
+        label(for='password') 
+          b Password
+        input.w3-input(type='password', name='password')
+        h4 
+          b Level
+        input.w3-radio(type='radio', name='level' value='aluno')
+        label(for="aluno") Aluno
+        p
+        input.w3-radio(type='radio', name='level' value='professor')
+        label(for="professor") Professor
+      div
+        input.w3-input(type='submit', value='Register')

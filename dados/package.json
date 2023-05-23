@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^16.0.3",
+    "express": "~4.16.1",
+    "gridfile": "^1.1.4",
+    "gridfs-stream": "^1.1.1",
+    "http-errors": "~1.6.3",
+    "jsonfile": "^6.1.0",
+    "jsonwebtoken": "^9.0.0",
+    "method-override": "^3.0.0",
+    "mongoose": "^7.2.0",
+    "mongoose-gridfs": "^1.3.0",
+    "morgan": "~1.9.1",
+    "multer-gridfs-storage": "^5.0.2",
+    "pug": "2.0.0-beta11"
+  }
+}

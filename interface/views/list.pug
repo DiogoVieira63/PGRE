@@ -1,0 +1,32 @@
+extends layout
+
+block content
+	.modal(id="display")
+	button.w3-button.w3-black.w3-margin
+		a(href="loggout") Loggout
+	.w3-container.w3-content
+	ul.w3-ul
+		li Nome: #{user.username}
+		li Level: #{user.level}
+	.w3-card-4
+		header.w3-indigo
+			h2 File List #[a.w3-button.w3-amber.w3-round(href="/files/upload") +]
+		.w3-container
+			table.w3-table.w3-bordered
+				tr
+					th Date
+					th File
+					th Size
+					th Type
+					th Description
+					th Actions
+				each file in files
+					tr(onclick=`showFile('${file.id}','${file.mimetype}')`)
+						td= new Date(file.date).toISOString().slice(0,16)
+						td= file.name
+						td= file.size
+						td= file.mimetype
+						td= file.description
+						td= actions
+		footer.w3-indigo
+			address Generated in RPCW :: #{date}

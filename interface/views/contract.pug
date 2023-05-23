@@ -1,0 +1,49 @@
+extends layout
+
+block content
+
+mixin createRow(key, value)
+  tr
+    td
+      b= key
+    td= value
+
+      
+
+block content
+  button.w3-button.w3-black.w3-margin-bottom
+    a(href="/") Voltar 
+  .w3-white.w3-card.w3-center.w3-content.w3-margin-top.w3-margin-bottom
+    header.w3-container.w3-center(class=`w3-indigo`)
+      h1 Contrato
+    table.w3-table-all.w3-centered
+        +createRow("Id", contrato._id)
+        +createRow("NomeInstituicao", contrato.NomeInstituicao)
+        +createRow("NIPCInstituicao", contrato.NIPCInstituicao)
+        +createRow("NomeTitularContrato", contrato.NomeTitularContrato)
+        +createRow("CienciaID", contrato.CienciaID)
+        +createRow("ORCID", contrato.ORCID)
+        +createRow("CienciaVitae", contrato.CienciaVitae)
+        +createRow("Carreira_RPN", contrato.Carreira_RPN)
+        +createRow("Categoria_RPN", contrato.Categoria_RPN)
+        +createRow("Vinculo_RPN", contrato.Vinculo_RPN)
+        +createRow("RegimePrestacaoServico", contrato.RegimePrestacaoServico)
+        +createRow("DataInicioContrato", contrato.DataInicioContrato)
+        +createRow("DataFimContrato", contrato.DataFimContrato)
+        +createRow("ETIremunerado", contrato.ETIremunerado)
+        +createRow("ProcedimentoVinculacao", contrato.ProcedimentoVinculacao)
+        +createRow("AreasInvestigacao", contrato.AreasInvestigacao)
+        +createRow("NivelFormação", contrato.NivelFormação)
+        +createRow("InstituicaoEnsino", contrato.InstituicaoEnsino)
+        +createRow("PaisInstituição", contrato.PaisInstituição)
+        +createRow("AnoDiploma", contrato.AnoDiploma)
+        +createRow("Curso", contrato.Curso)
+        +createRow("AreaCNAEF", contrato.AreaCNAEF)
+        +createRow("AreaFORD", contrato.AreaFORD)
+        +createRow("ProvasAgregacao", contrato.ProvasAgregacao)
+        +createRow("TituloEspecialista", contrato.TituloEspecialista)
+        +createRow("ProvasCoordenacao", contrato.ProvasCoordenacao)
+        +createRow("ProvasAptidao", contrato.ProvasAptidao)
+        
+
+
