@@ -1,36 +1,55 @@
 # users
 ## fields
+- email (_id)
 - username 
 - name
-- email
 - level
-- active (?)
-- filiação (?) 
+- active
+- affiliation (optional)
 - registerDate
 - lastAccess 
 - password
+- notifications:
+    - message
+    - read (boolean)
 
 ## actions
-- register 
-- login
+- register ✅
+- login ✅
 - changePassword
-- changeUsername (?)
+- changeUsername
+- changeName
+- changeAffiliation
+- deleteAccount
 
 ---
 # meta
 ## fields
-- type
+- type (livros, artigos, aplicações, trabalhos de alunos, monografias ,relatórios, relatório, tese, artigo, aplicação, slides,
+teste/exame, problema resolvido)
 - title
 - subtitle
-- creationDate
+- description
+- creationDate (optional)
 - registationDate (entrada no sistema)
-- visibility (who can see (alunos apenas ou professores|adminstradores))
+- visibility (who can see (alunos ou apenas professores|adminstradores))
+- tags
+- theme
+- ratings 
+- author
+- uploadBy
+- course
+
 
 ## actions
-- create
-- get
+- create ✅
+- getOne ✅
+- getByCourse
 - update
 - remove
+- addType (professor | admin)
+- addRating
+- removeRating
 
 --- 
 # courses
@@ -39,17 +58,62 @@
 - description
 - students
 - professors
-- posts
+- posts: 
+    - title
+    - description
+    - comments
+    - publishBy
+    - _id do recurso (optional)
 - type (Public | Private | Invite-only)
 
 ## actions
-- getAll(Public | Private)
-- create
+- getAll(Public | Private) 
+- create ✅
 - remove
-- addStudent
-- getByAluno
+- addStudent ✅
+- findByAluno ✅
 - removeStudent
-- addProfessor
-- getByProfessor
+- addProfessor ✅
+- findByProfessor ✅
 - removeProfessor
+- addPost
+- editPost
+- addCommentPost
+- editCommentPost
+- removeCommentPost
+- removePost
 
+--- 
+
+# Interface
+
+## Navigation Bar
+- Content:
+    - Home
+    - Search
+- Notifications
+- Options
+    - Profile
+    - Logout
+
+## Initial Page
+
+- My Courses
+- Posts (from courses)
+
+## Search Page
+- Search Bar
+- Options
+    - Sort
+    - Filter
+- Lista Cursos
+
+## Course Page
+
+- Course Info
+- Posts
+- Resources
+
+## Profile Page
+- User Info
+- Edit Info
