@@ -39,17 +39,22 @@ teste/exame, problema resolvido)
 - author
 - uploadBy
 - course
+- mimetype
+- size
 
 
 ## actions
 - create ✅
 - getOne ✅
-- getByCourse
-- update
-- remove
-- addType (professor | admin)
-- addRating
-- removeRating
+- getByCourse ✅
+- update✅
+- remove ✅
+- addRating ✅
+- removeRating ✅
+- editRating ✅
+- suggestType (Professor) ✅
+- approveType (Admin) ✅
+- rejectType (Admin) ✅
 
 --- 
 # courses
@@ -82,6 +87,9 @@ teste/exame, problema resolvido)
 - editCommentPost
 - removeCommentPost
 - removePost
+- hasPermission (check if user has permission to access course)
+- isProfessor 
+- isAdmin 
 
 --- 
 

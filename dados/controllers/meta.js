@@ -23,8 +23,47 @@ module.exports.getOne = (id) => {
     })
 }
 
-module.exports.getAll = (level) => {
-    return Meta.find({level : level})
+
+module.exports.getAllByCourse = (course) => {
+    return Meta.find({ course: course })
+    .then(meta => {
+        return meta;
+    })
+    .catch(err => {
+        return err;
+    })
+}
+
+module.exports.update = (id, meta) => {
+    return Meta.updateOne({ _id: id }, meta).then(meta => {
+        return meta;
+    }).catch(err => {
+        return err;
+    })
+}
+
+module.exports.delete = (id) => {
+    return Meta.deleteOne({ _id: id })
+    .then(meta => {
+        return meta;
+    })
+    .catch(err => {
+        return err;
+    })
+}
+
+module.exports.addRating = (id, rating) => {
+    return Meta.updateOne({ _id: id }, { $push: { ratings: rating } })
+    .then(meta => {
+        return meta;
+    })
+    .catch(err => {
+        return err;
+    })
+}
+
+module.exports.removeRating = (id, rating) => {
+    return Meta.updateOne({ _id: id }, { $pull: { ratings: rating } })
     .then(meta => {
         return meta;
     })
@@ -34,4 +73,13 @@ module.exports.getAll = (level) => {
 }
 
 
+module.exports.editRating = (id, rating) => {
+    return Meta.updateOne({ _id: id, "ratings.id": rating.id }, { $set: { "ratings.$.value": rating.value } })
+    .then(meta => {
+        return meta;
+    })
+    .catch(err => {
+        return err;
+    })
+}
 

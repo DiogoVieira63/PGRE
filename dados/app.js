@@ -4,8 +4,7 @@ var path = require("path");
 var logger = require("morgan");
 var cookieParser = require("cookie-parser");
 
-var indexRouter = require("./routes/index");
-var cursosRouter = require("./routes/cursos");
+
 
 require('dotenv').config({path: '../.env'})
 
@@ -42,15 +41,17 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 
 
-
-
-
 app.use(function (req, res, next) {
   req.gfs = gfs;
   next();
 });
 
-app.use("/", indexRouter);
+var metaFilesRouter = require("./routes/metaFiles");
+var metaTypesRouter = require("./routes/metaTypes");
+var cursosRouter = require("./routes/cursos");
+
+app.use("/meta/files", metaFilesRouter);
+app.use("/meta/types", metaTypesRouter);
 app.use('/cursos',cursosRouter);
 
 // catch 404 and forward to error handler
