@@ -16,11 +16,8 @@
 ## actions
 - register ✅
 - login ✅
-- changePassword
-- changeUsername
-- changeName
-- changeAffiliation
-- deleteAccount
+- update ✅
+- delete ✅
 
 ---
 # meta

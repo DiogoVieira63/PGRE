@@ -6,6 +6,26 @@ var passport = require('passport');
 var jwt = require('jsonwebtoken');
 
 
+function verificaAcesso(req, res, next) {
+  var myToken = req.query.token || req.body.token;
+  if (myToken) {
+    jwt.verify(myToken, process.env.JWT_KEY, function(err, decoded) {
+      if (err) {
+        console.log('Token inválido.');
+        return res.status(403).jsonp({success: false, status: 'Token Inválido.'});
+      }
+      else {
+        req.user = decoded;
+        console.log('Token válido do user.', req.user);
+        next();
+      }
+    })
+  }else{
+    res.status(403).jsonp({success: false, status: 'Não foi fornecido um token.'});
+  }
+}
+
+
 /* GET users listing. */
 router.get('/', verificaAcesso,function(req, res, next) {
   User.list()
@@ -41,25 +61,6 @@ router.post('/register', function(req, res, next) {
 });
 
 
-function verificaAcesso(req, res, next) {
-  var myToken = req.query.token || req.body.token;
-  console.log("token",myToken);
-  if (myToken) {
-    jwt.verify(myToken, process.env.JWT_KEY, function(err, decoded) {
-      if (err) {
-        console.log('Token inválido.');
-        return res.status(403).jsonp({success: false, status: 'Token Inválido.'});
-      }
-      else {
-        req.user = decoded;
-        console.log('Token válido do user.', req.user);
-        next();
-      }
-    })
-  }else{
-    res.status(403).jsonp({success: false, status: 'Não foi fornecido um token.'});
-  }
-}
 
 router.post('/login', passport.authenticate('local'), function(req, res){
   jwt.sign({ 
@@ -75,6 +76,22 @@ router.post('/login', passport.authenticate('local'), function(req, res){
 })
 
 
+// update info user
+router.put('/update', verificaAcesso ,function(req, res, next) {
+  User.updateUser(req.user.id, req.body)
+    .then(data => res.jsonp(data))
+    .catch(err => res.jsonp({error: err}));
+});
+
+
+// delete user
+router.delete('/delete', verificaAcesso ,function(req, res, next) {
+  User.deleteUser(req.user.id)
+    .then(data => res.jsonp(data))
+    .catch(err => res.jsonp({error: err}));
+});
+
+/*
 router.put('/:id', verificaAcesso ,function(req, res, next) {
   User.updateUser(req.params.id, req.body)
     .then(data => res.jsonp(data))
@@ -86,5 +103,7 @@ router.delete('/:id', verificaAcesso ,function(req, res, next) {
     .then(data => res.jsonp(data))
     .catch(err => res.jsonp({error: err}));
 });
+*/
+
 
 module.exports = router;
