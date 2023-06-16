@@ -8,7 +8,7 @@ const Curso = require("../controllers/curso");
 const ObjectId = require("mongoose").Types.ObjectId;
 var jwt = require('jsonwebtoken');
 
-const Permission = require("utils/permission");
+const Permission = require("./utils/permission");
 const verifyProfessor = Permission.professor;
 const verifyJWT = Permission.token;
 const verifyCourse = Permission.course;

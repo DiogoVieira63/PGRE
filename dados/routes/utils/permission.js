@@ -1,4 +1,6 @@
 var jwt = require("jsonwebtoken");
+const Curso = require("../../controllers/curso");
+
 
 function token(req, res, next) {
   var token = req.cookies.token;
@@ -38,36 +40,40 @@ function course(req, res, next) {
     });
 }
 
-function professor(req, res, next) {
-  var course = req.params.course;
-  var id = req.user.id;
-  course
-    .isProfessor(id, course)
-    .then((isProfessor) => {
-      if (isProfessor) {
+function professor(req, res, next) { 
+  if( req.user.level == "professor"){
+      var course = req.params.course;
+      if (course){
+        var id = req.user.id;
+        Curso
+          .isProfessor(id, course)
+          .then((isProfessor) => {
+            if (isProfessor) {
+              next();
+            } else {
+              res.status(403).send();
+            }
+          })
+          .catch((err) => {
+            res.status(500).send();
+          });
+      }else{
         next();
-      } else {
-        res.status(403).send();
       }
-    })
-    .catch((err) => {
-      res.status(500).send();
-    });
+  }
+  else{
+    res.status(403).send();
+  }
 }
 
 function admin(req, res, next) {
-  var id = req.user.id;
-  Curso.isAdmin(id)
-    .then((isAdmin) => {
-      if (isAdmin) {
-        next();
-      } else {
-        res.status(403).send();
-      }
-    })
-    .catch((err) => {
-      res.status(500).send();
-    });
+  var level = req.user.level;
+  if (level == "admin"){
+    next();
+  }
+  else{
+    res.status(403).send();
+  }
 }
 
 module.exports = {

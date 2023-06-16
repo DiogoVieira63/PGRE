@@ -64,29 +64,30 @@ teste/exame, problema resolvido)
     - title
     - description
     - comments
-    - publishBy
+    - publishBy 
     - _id do recurso (optional)
 - type (Public | Private | Invite-only)
+- regente( Permissão para remover alunos/professors )
+
 
 ## actions
 - getAll(Public | Private) 
 - create ✅
-- remove
+- remove ✅(+/-)
 - addStudent ✅
 - findByAluno ✅
-- removeStudent
+- removeStudent ✅ acho eu 
 - addProfessor ✅
 - findByProfessor ✅
-- removeProfessor
-- addPost
-- editPost
-- addCommentPost
-- editCommentPost
-- removeCommentPost
-- removePost
-- hasPermission (check if user has permission to access course)
-- isProfessor 
-- isAdmin 
+- removeProfessor ✅
+- addPost ✅
+- editPost ✅
+- addCommentPost ✅
+- editCommentPost ✅
+- removeCommentPost ✅
+- removePost 
+- hasPermission (check if user has permission to access course) ✅ acho eu
+- isProfessor ✅ 
 
 --- 
 

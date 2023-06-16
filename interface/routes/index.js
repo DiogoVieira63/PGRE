@@ -33,6 +33,7 @@ function checkLoggin(req, res, next) {
 }
 
 router.get('/',checkLoggin, function(req, res, next) {
+  console.log('Página Inicial');
   Dados.getAllFiles(req.cookies['token'])
     .then(dados => {
       let actions = dados.data.user.level == "professor";
@@ -51,8 +52,8 @@ router.get('/cursos',checkLoggin, function(req, res, next) {
     .catch(err => res.render('error', {error: err}));
 });
 
-router.get('/cursos/:id',checkLoggin, function(req, res, next) {
-  Dados.createCurso(req.params.id,req.cookies['token']).then(dados => {
+router.post('/cursos',checkLoggin, function(req, res, next) {
+  Dados.createCurso(req.body,req.cookies['token']).then(dados => {
     res.redirect('/cursos');}
   ).catch(err => {
     res.status(500).jsonp({error: err});

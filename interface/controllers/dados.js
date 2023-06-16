@@ -4,7 +4,7 @@ var axios = require('axios');
 
 module.exports.getAllFiles = (token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;  
-    return axios.get(`${url}/files`,{headers: { Cookie: `token=${token}` }});
+    return axios.get(`${url}/meta/files`,{headers: { Cookie: `token=${token}` }});
 }
 
 
