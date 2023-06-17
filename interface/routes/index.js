@@ -36,6 +36,7 @@ router.get('/',checkLoggin, function(req, res, next) {
   console.log('Página Inicial');
   Dados.getAllFiles(req.cookies['token'])
     .then(dados => {
+      console.log(dados.data);
       let actions = dados.data.user.level == "professor";
       console.log("Actions",actions);
       res.render('list', { files: dados.data.lista, user: dados.data.user, actions: actions});

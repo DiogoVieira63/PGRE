@@ -19,7 +19,7 @@ function token(req, res, next) {
       }
       // pass decoded to next middleware
       req.user = decoded;
-      next();
+      next(); 
     }
   );
 }

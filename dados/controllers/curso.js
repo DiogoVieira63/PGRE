@@ -218,15 +218,6 @@ module.exports.getOne = (id) => {
     })
 }
 
-module.exports.getAll = (level) => {
-    return Meta.find({level : level})
-    .then(meta => {
-        return meta;
-    })
-    .catch(err => {
-        return err;
-    })
-}
 */
 
 

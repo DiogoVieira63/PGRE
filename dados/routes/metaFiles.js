@@ -16,7 +16,7 @@ const verifyCourse = Permission.course;
 
 
 // upload file meta
-router.post("/",verifyJWT,verifyProfessor,function (req, res, nxt){
+router.post("/",verifyJWT,function (req, res, nxt){
   var file = req.body.file;
   console.log(file);
   var body = req.body.body;

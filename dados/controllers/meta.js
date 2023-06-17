@@ -12,6 +12,16 @@ module.exports.insert = meta => {
     })
 }
 
+module.exports.getAll = (level) => {
+    return Meta.find()
+    .then(meta => {
+        return meta;
+    })
+    .catch(err => {
+        return err;
+    })
+}
+
 
 module.exports.getOne = (id) => {
     return Meta.findOne({ _id: id })

@@ -22,7 +22,7 @@ block content
 					th Actions
 				each file in files
 					tr(onclick=`showFile('${file.id}','${file.mimetype}')`)
-						td= new Date(file.date).toISOString().slice(0,16)
+						td= new Date(file.registationDate).toISOString().slice(0,16)
 						td= file.name
 						td= file.size
 						td= file.mimetype
