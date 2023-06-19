@@ -1,0 +1,54 @@
+extends layout
+
+block content
+
+    .w3-container
+        .w3-container.w3-content
+        .w3-card-4.w3-margin
+            header.w3-container.w3-indigo
+                h1 Informação do Curso
+                
+            .w3-margin
+                p
+                    b Nome: 
+                    | #{curso.nome}
+                p 
+                    b Descrição: 
+                    | #{curso.descricao}
+                p 
+                    b Professores: 
+                    ul
+                    each prof in curso.professores 
+                        li.w3-margin-left= prof
+                p 
+                    b Nº de Alunos: 
+                    | #{curso.alunos.length}
+                p
+                    b Tipo: 
+                    | #{curso.type}
+
+    .w3-container.w3-half
+        .w3-container.w3-content
+        .w3-card-4.w3-margin
+            header.w3-container.w3-indigo
+                h1 Posts do Curso
+
+            each post in curso.posts       
+                .w3-container
+                    .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
+                        p 
+                            b Título: 
+                            | #{post.title}
+                        p 
+                            b Descrição: 
+                            | #{post.description}
+                        p 
+                            b Publicado por: 
+                            | #{post.publishedBy}
+
+    .w3-container.w3-half
+        .w3-container.w3-content
+        .w3-card-4.w3-margin
+            header.w3-container.w3-indigo
+                h1 Recursos do Curso
+

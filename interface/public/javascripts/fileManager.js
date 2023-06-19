@@ -11,3 +11,15 @@ function showFile(name, type){
     $("#display").append(file,download);
     $("#display").modal({ showClose: true, keyboard : true });
 }
+
+
+function toggleAccordion(id){
+    console.log(id)
+    var x = document.getElementById('accordion' + id);
+    if (x.classList.contains('w3-hide')) {
+      x.classList.remove('w3-hide');
+    } else {
+      x.classList.add('w3-hide');
+    }
+}
+

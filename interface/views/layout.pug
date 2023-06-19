@@ -8,5 +8,23 @@ html
     script(src='/javascripts/jquery.modal.min.js')  
     link(rel='stylesheet', href='/stylesheets/jquery.modal.min.css')
     script(src='/javascripts/fileManager.js')
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
   body
+    .w3-bar.w3-border.w3-light-grey.w3-xlarge
+        a.w3-bar-item.w3-button(href="/") 
+          i.fa.fa-home 
+          .w3-text.w3-medium Página Inicial
+        a.w3-bar-item.w3-button(href="/cursos")
+          i.fa.fa-book
+          .w3.text.w3-medium Pesquisar Cursos
+        a.w3-bar-item.w3-button.w3-right(href="/loggout")
+          i.fa.fa-sign-out
+          .w3.text.w3-medium Terminar sessão
+        a.w3-bar-item.w3-button.w3-right(href="/profile")
+          i.fa.fa-user
+          .w3.text.w3-medium Perfil
+        a.w3-bar-item.w3-button.w3-right(href="/")
+          i.fa.fa-bell
+          .w3.text.w3-medium Notificações
+
     block content

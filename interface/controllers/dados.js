@@ -27,7 +27,17 @@ module.exports.getFile = (id, token) => {
 
 module.exports.getAllCursos = (token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
-    return axios.get(`${url}/cursos`),{headers: { Cookie: `token=${token}` }};
+    return axios.get(`${url}/cursos`,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.getOneCurso = (id,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/cursos/${id}`,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.getMyCursos = (token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/cursos/meuscursos`,{headers: { Cookie: `token=${token}` }});
 }
 
 module.exports.createCurso = (curso,token) => {

@@ -4,6 +4,7 @@ const Curso = require("../../controllers/curso");
 
 function token(req, res, next) {
   var token = req.cookies.token;
+  console.log("token -> "+token)
   jwt.verify(
     token,
     process.env.JWT_KEY,

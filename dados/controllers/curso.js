@@ -59,6 +59,15 @@ module.exports.getAll = () => {
     });
 }
 
+module.exports.getOne = (id) => {
+    return Curso.findOne({_id:id}).then(curso => {
+        return curso;
+    }).catch(err => {
+        return err;
+    });
+}
+
+
 module.exports.removeCurso = (id) => {
     return Curso.deleteOne({_id:id}).then(curso => {
         return curso;

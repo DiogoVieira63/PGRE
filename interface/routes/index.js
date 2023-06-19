@@ -34,21 +34,60 @@ function checkLoggin(req, res, next) {
 
 router.get('/',checkLoggin, function(req, res, next) {
   console.log('Página Inicial');
-  Dados.getAllFiles(req.cookies['token'])
+  Dados.getMyCursos(req.cookies['token'])
     .then(dados => {
-      console.log(dados.data);
-      let actions = dados.data.user.level == "professor";
-      console.log("Actions",actions);
-      res.render('list', { files: dados.data.lista, user: dados.data.user, actions: actions});
+      //console.log("Cursos",dados.data);
+      data =  new Date().toISOString().substring(0, 16)
+      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos"});
+    })
+    .catch(err => res.render('error', {error: err}));
+  // Dados.getAllFiles(req.cookies['token'])
+  //   .then(dados => {
+  //     //console.log(dados.data);
+  //     let actions = dados.data.user.level == "professor";
+  //     //console.log("Actions",actions);
+  //     res.render('list', { files: dados.data.lista, user: dados.data.user, actions: actions});
+  //   })
+  //   .catch(err => res.render('error', {error: err}));
+});
+
+router.get('/cursos',checkLoggin, function(req, res, next) {
+  console.log(req.cookies['token'])
+  Dados.getAllCursos(req.cookies['token'])
+    .then(dados => {
+      //console.log("Cursos",dados.data);
+      data =  new Date().toISOString().substring(0, 16)
+      res.render('listacursos', { cursos: dados.data, data: data, titulo: "Lista de Cursos"});
+    })
+    .catch(err => res.render('error', {error: err}));
+  // Dados.getAllCursos(req.cookies['token'])
+  //   .then(dados => {
+  //     //console.log("Cursos",dados.data);
+  //     data =  new Date().toISOString().substring(0, 16)
+  //     res.render('listacursos', { cursos: dados.data, data: data});
+  //   })
+  //   .catch(err => res.render('error', {error: err}));
+});
+
+router.get('/meuscursos',checkLoggin, function(req, res, next) {
+  console.log(req.cookies['token'])
+  Dados.getMyCursos(req.cookies['token'])
+    .then(dados => {
+      //console.log("Cursos",dados.data);
+      data =  new Date().toISOString().substring(0, 16)
+      res.render('listacursos', { cursos: dados.data, data: data, titulo: "Meus Cursos"});
     })
     .catch(err => res.render('error', {error: err}));
 });
 
-router.get('/cursos',checkLoggin, function(req, res, next) {
-  Dados.getAllCursos(req.cookies['token'])
+
+router.get('/cursos/:id',checkLoggin, function(req, res, next) {
+  console.log(req.cookies['token'])
+  Dados.getOneCurso(req.params.id,req.cookies['token'])
     .then(dados => {
-      console.log("Cursos",dados.data);
-      res.redirect('/');
+      data =  new Date().toISOString().substring(0, 16)
+      console.log(dados.data)
+      res.render('curso', { curso: dados.data, data: data});
     })
     .catch(err => res.render('error', {error: err}));
 });

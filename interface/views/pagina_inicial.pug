@@ -1,0 +1,42 @@
+extends layout
+
+block content
+    .w3-container.w3-content
+    .w3-card-4
+        header.w3-indigo
+            h2= titulo
+        .w3-container
+            table.w3-table.w3-bordered
+                tr
+                    th Nome
+                    th Descrição
+                    th Tipo
+                    th Últimos anúncios
+                each curso in cursos
+                    tr
+                        td 
+                            a(href=`/cursos/${curso._id}`)
+                                b= curso.nome
+                        td= curso.descricao
+                        td= curso.type
+                        td 
+                            button.w3-button.w3-grey.w3-card-4(onclick=`toggleAccordion('${curso._id}')`) Mostrar         
+                    
+                    tr
+                        td(colspan=4)
+                            .w3.accordion
+                                .w3-accordion-content.w3-hide(id="accordion"+curso._id)
+                                    each post in curso.posts       
+                                        .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
+                                            p 
+                                                b Título: 
+                                                | #{post.title}
+                                            p 
+                                                b Descrição: 
+                                                | #{post.description}
+                                            p 
+                                                b Publicado por: 
+                                                | #{post.publishedBy}
+                
+        footer.w3-indigo
+            address Generated in RPCW :: #{data}

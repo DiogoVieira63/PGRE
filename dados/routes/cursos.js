@@ -15,10 +15,60 @@ const verifyJWT = Permission.token;
 const verifyCourse = Permission.course;
 
 
+router.get("/",verifyJWT,function (req, res) {
+    Curso.getAll().then((data) => {
+        console.log("Cursos",data);  
+        res.jsonp(data);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).jsonp({error: err});
+    });
+});
+
+router.get("/meuscursos",verifyJWT,function (req, res) {
+    console.log(req.user)
+    if (req.user.level == "aluno"){
+        Curso.findByAluno(req.user.username).then((data) => {
+            console.log("Cursos",data);  
+            res.jsonp(data);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).jsonp({error: err});
+        });
+    }
+    else if (req.user.level == "professor"){
+        Curso.findByProfessor(req.user.username).then((data) => {
+            console.log("Cursos",data);  
+            res.jsonp(data);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).jsonp({error: err});
+        });
+    }
+    // Curso.getAll().then((data) => {
+    //     console.log("Cursos",data);  
+    //     res.jsonp(data);
+    // }).catch((err) => {
+    //     console.log(err);
+    //     res.status(500).jsonp({error: err});
+    // });
+});
+
+router.get("/:curso",verifyJWT,function (req, res) {
+    Curso.getOne(req.params.curso).then((data) => {
+        console.log("Cursos",data);  
+        res.jsonp(data);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).jsonp({error: err});
+    });
+});
+
+
 
 router.post("/create"/*,verifyJWT,verifyProfessor*/,function (req, res, nxt) {
     var curso = req.body;
-    var username = "EDU";//user.username;req.
+    var username = "EDU";//req.user.username;
     Curso.insert(curso,username)
     .then((curso) => {
         res.status(201).jsonp(curso);
@@ -129,16 +179,6 @@ router.post("/:curso/:post/edit"/*,verifyJWT,verifyProfessor*/,function (req, re
   }).catch((err) => {
       nxt(err);
   });
-});
-
-router.get("/",verifyJWT,function (req, res) {
-    Curso.getAll().then((data) => {
-        console.log("Cursos",data);  
-        res.jsonp(data);
-    }).catch((err) => {
-        console.log(err);
-        res.status(500).jsonp({error: err});
-    });
 });
 
 module.exports = router;

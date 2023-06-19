@@ -104,15 +104,15 @@ teste/exame, problema resolvido)
 
 ## Initial Page
 
-- My Courses
-- Posts (from courses)
+- My Courses ✅
+- Posts (from courses) | titulo, descricao, publishedBy, data
 
 ## Search Page
 - Search Bar
 - Options
     - Sort
     - Filter
-- Lista Cursos
+- Lista Cursos ✅
 
 ## Course Page
 
