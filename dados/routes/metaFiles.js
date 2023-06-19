@@ -103,12 +103,13 @@ router.delete("/:id",verifyJWT,verifyProfessor, function (req, res, nxt){
 
 
 //get all files by course
-router.get("/course/:course",verifyJWT,verifyCourse,function (req, res) {
+router.get("/course/:course",verifyJWT/*,verifyCourse*/,function (req, res) {
   var d = new Date().toISOString().substring(0, 19);
   console.log("User",req.user);
   var course = req.params.course;
   Meta.getAllByCourse(course).then((data) => {
-    res.jsonp({data});
+    console.log("DATA: "+data)
+    res.jsonp({metas: data});
   }).catch((err) => {
     console.log(err);
     res.status(500).jsonp({error: err});

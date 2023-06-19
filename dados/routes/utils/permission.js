@@ -37,6 +37,7 @@ function course(req, res, next) {
       }
     })
     .catch((err) => {
+      console.log("ERRO PERMISSAO: "+err)
       res.status(500).send();
     });
 }

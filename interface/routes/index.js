@@ -98,7 +98,12 @@ router.get('/cursos/:id',checkLoggin, function(req, res, next) {
     .then(dados => {
       data =  new Date().toISOString().substring(0, 16)
       console.log(dados.data)
-      res.render('curso', { curso: dados.data, data: data});
+      Dados.getAllByCourse(req.params.id,req.cookies['token'])
+        .then(metas => {
+          console.log("METAS: "+ metas.data)
+          res.render('curso', { curso: dados.data, metas: metas.data.metas, data: data});
+        })
+        .catch(err => res.render('error', {error: err}));
     })
     .catch(err => res.render('error', {error: err}));
 });
