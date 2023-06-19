@@ -27,10 +27,15 @@ module.exports.getFile = (id, token) => {
 
 module.exports.getAllCursos = (token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
-    return axios.get(`${url}/cursos`),{headers: { Cookie: `token=${token}` }};
+    return axios.get(`${url}/cursos`,{headers: { Cookie: `token=${token}` }});
 }
 
 module.exports.createCurso = (curso,token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.post(`${url}/cursos/create`, {curso: curso},{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.getProfile = (token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/cursos/profile`,{headers: { Cookie: `token=${token}` }});
 }

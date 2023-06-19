@@ -16,14 +16,22 @@ const verifyCourse = Permission.course;
 
 
 
-router.post("/create"/*,verifyJWT,verifyProfessor*/,function (req, res, nxt) {
-    var curso = req.body;
-    var username = "EDU";//user.username;req.
-    Curso.insert(curso,username)
+router.get("/profile",verifyJWT,function (req, res, nxt) {
+    Curso.findByAluno(req.user.username).then((cursos) => {
+        res.status(200).jsonp({cursos: cursos, user: req.user});
+    }
+    ).catch((err) => {
+        nxt(err);
+    });
+});
+
+router.post("/create",verifyJWT,/*verifyProfessor,*/function (req, res, nxt) {
+    var curso = req.body.curso;
+    Curso.insert(curso,req.user.username)
     .then((curso) => {
         res.status(201).jsonp(curso);
     }).catch((err) => {
-        nxt(err);
+        res.status(500).jsonp({error: err});
     });
 });
 

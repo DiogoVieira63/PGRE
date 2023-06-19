@@ -13,7 +13,6 @@ var User = new Schema({
     password: String,
     level: String,
     active: Boolean,
-    dateCreated: String,
     name: String,
     affiliation: Affiliation,
     registerDate: Date,

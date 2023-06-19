@@ -1,23 +1,61 @@
 extends layout
 
+
+
 block content
-  h1.w3-center Register
+  h1.w3-center Registo
   .w3-card-4.w3-content.w3-padding.w3-margin-top
-    form.w3-form(action='register', method='POST')
+    form.w3-form(action='register', method='POST').w3-white
       div
-        label(for='username') 
-        b Username
-        input.w3-input(type='text', name='username')
+        label(for='email') 
+        b Email
+        input.w3-input(type='email', name='email', required='required')
+      div
+        label(for='name') 
+        b Nome
+        input.w3-input(type='text', name='name', required='required')
       div
         label(for='password') 
-          b Password
-        input.w3-input(type='password', name='password')
+          b Palavra-passe
+        input.w3-input(type='password', name='password', required='required')
         h4 
-          b Level
+          b Tipo de Utilizador
         input.w3-radio(type='radio', name='level' value='aluno')
         label(for="aluno") Aluno
         p
         input.w3-radio(type='radio', name='level' value='professor')
         label(for="professor") Professor
       div
-        input.w3-input(type='submit', value='Register')
+        h4 
+          b Afiliação
+        input.w3-radio(type='radio', name='afiliacao' value='true',onchange='showInstituicao(true)')
+        label(for="sim") Sim
+        p
+        input.w3-radio(type='radio', name='afiliacao' value='false',checked="checked", onchange='showInstituicao(false)')
+        label(for="nao") Não
+          div#instituicao(style='display:none').w3-margin-top
+            label(for='instituicao') 
+              b Instituição
+              select.w3-select(name='universidade')
+                each instituicao in instituicoes
+                  option(value=instituicao) #{instituicao}
+          div#departamento(style='display:none').w3-margin-top
+            label(for='departamento') 
+              b Instituição
+              select.w3-select(name='departamento')
+                each departamento in departamentos 
+                  option(value=departamento) #{departamento}
+      div
+        input.w3-input(type='submit', value='Register').w3-button.w3-blue.w3-margin-top
+
+  script.
+    function showInstituicao(show) {
+      if (show) {
+        document.getElementById("instituicao").style.display = "block";
+        document.getElementById("departamento").style.display = "block";
+      } else {
+        document.getElementById("instituicao").style.display = "none";
+        document.getElementById("departamento").style.display = "none";
+      }
+    }
+  

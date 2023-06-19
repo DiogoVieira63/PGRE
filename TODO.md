@@ -93,6 +93,13 @@ teste/exame, problema resolvido)
 
 # Interface
 
+## Forms
+- Login ✅
+- Register ✅
+- Edit Profile ✅
+- Create Course ✅
+
+
 ## Navigation Bar
 - Content:
     - Home
@@ -121,5 +128,5 @@ teste/exame, problema resolvido)
 - Resources
 
 ## Profile Page
-- User Info
-- Edit Info
+- User Info ✅
+- Edit Info ✅

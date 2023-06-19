@@ -6,7 +6,12 @@ var Curso = require('../models/curso');
     
 // create a new curso
 module.exports.insert = (curso,username) => {
+    console.log(curso);
     curso["professores"] = [username];
+    curso['regente'] = username;
+    curso['alunos'] = [];
+    curso['posts'] = [];
+    console.log(curso);
     return Curso.create(curso).then(curso => {
         return curso;
     }).catch(err => {

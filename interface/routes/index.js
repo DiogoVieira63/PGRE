@@ -53,6 +53,12 @@ router.get('/cursos',checkLoggin, function(req, res, next) {
     .catch(err => res.render('error', {error: err}));
 });
 
+
+router.get('/cursos/form',checkLoggin, function(req, res, next) {
+  res.render('cursoForm');
+});
+
+
 router.post('/cursos',checkLoggin, function(req, res, next) {
   Dados.createCurso(req.body,req.cookies['token']).then(dados => {
     res.redirect('/cursos');}
@@ -64,7 +70,10 @@ router.post('/cursos',checkLoggin, function(req, res, next) {
 
 
 router.get('/register', function(req, res, next) {
-  res.render('register');
+  // TODO : Universidades disponiveis
+  let universidades = ["Universidade do Minho","Universidade do Porto","Universidade de Lisboa"];
+  let departamentos = ["Departamento de Informática","Departamento de Física","Departamento de Matemática"];
+  res.render('register',{instituicoes: universidades, departamentos: departamentos});
 });
 
 router.get('/no_login', function(req, res, next) {
@@ -128,10 +137,12 @@ function validateFile(req, res, next) {
     
 
 
-router.post('/files',checkLoggin,upload.single("file"), function(req, res, next) {
+router.post('/files',checkLoggin,upload.single("file"),function(req, res, next) {
   console.log("Upload File");
+  req.body.tag =  req.body.tag.slice(0, -1);
   Dados.insert(req.file,req.body,req.cookies['token']).then(dados => {
-    res.redirect('/');
+      console.log("File Uploaded");
+      res.redirect('/');
   }
   ).catch(err => {
     res.render('error', {error: err});
@@ -139,9 +150,9 @@ router.post('/files',checkLoggin,upload.single("file"), function(req, res, next)
   });
 });
 
-router.get('/files/upload',checkLoggin, function(req, res, next) {
+router.get('cursos/:curso/files/upload',checkLoggin, function(req, res, next) {
   console.log("FileForm");
-  res.render('fileForm');
+  res.render('fileForm',{curso: req.params.curso});
 });
 
 
@@ -160,6 +171,31 @@ router.get('/files/:id',checkLoggin, function(req, res, next) {
   });
 });
 */
+
+
+router.get('/profile',checkLoggin, function(req, res, next) {
+    let cookie = req.cookies['token'];
+    Dados.getProfile(cookie).then(dados => {
+      console.log(dados.data);
+      res.render('profile', {user: dados.data.user, cursos: dados.data.cursos});
+    }
+    ).catch(err => {
+      res.render('error', {error: err});
+    });
+});
+
+router.get('/profile/edit',checkLoggin, function(req, res, next) {
+  let cookie = req.cookies['token'];
+  Dados.getProfile(cookie).then(dados => {
+    console.log(dados.data);
+    let universidades = ["Universidade do Porto","Universidade de Lisboa","Universidade do Minho"];
+    let departamentos = ["Departamento de Informática","Departamento de Física","Departamento de Matemática"];
+    res.render('editProfile', {user: dados.data.user, cursos: dados.data.cursos, options: {university: universidades, department: departamentos}});
+  }
+  ).catch(err => {
+    res.render('error', {error: err});
+  });
+});
 
 
 router.post('/register',function(req, res, next) {

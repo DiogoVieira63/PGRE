@@ -1,21 +1,103 @@
 extends layout
 
 block content
-    .w3-card-4    
-        header.w3-indigo
-            h2 File Upload
-        form.w3-container(action="/files" method="POST" enctype="multipart/form-data")
-            fieldset 
-                legend Metadata
-                label.w3-text-indigo
-                    b Select File
-                input.w3-input.w3-border.w3-light-grey(type="file" name="file")
-                label.w3-text-indigo
-                    b Description
-                input.w3-input.w3-border.w3-light-grey(type="text" name="description")
-                label.w3-text-indigo
-                    b Level
-                input.w3-input.w3-border.w3-light-grey(type="text" name="Curso")
-            input.w3-btn.w3-blue-grey(type="submit" value="Send")
-        footer.w3-indigo
-            address Generated in RPCW :: #{date}
+  h1.w3-center Adicionar Ficheiro
+  .w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+    form.w3-container(action="/files" method="POST" enctype="multipart/form-data")
+      div
+        b Select File
+        input.w3-input(type="file" name="file" required="required")
+      div
+        label
+          b Nome
+        input.w3-input(type="text" name="name" required="required")
+      div
+        label
+            b Título
+        input.w3-input(type="text" name="title" required="required")
+      div
+        label
+            b Subtítulo
+        input.w3-input(type="text" name="subtitle")
+      div
+        label
+            b Descrição
+        input.w3-input(type="text" name="description")
+      div
+        label
+          b Tags
+        div#tags
+        input.w3-input.w3-round(id="tagInput" type="text" name="tag" style="width: 50%; display: inline-block" placeholder="Tag")
+        span.w3-button.w3-blue.w3-circle.w3-small(style="margin-left: 5px;" onclick="addToList()")
+          i.w3-circle.fa.fa-plus
+      div
+        label
+            b Tema
+        input.w3-input(type="text" name="theme")
+      div
+        label
+            b Autor
+        input.w3-input(type="text" name="author")
+
+      div 
+        label
+          b Data de Criação/Publicação
+        input.w3-input(type="date" name="creationDate") 
+      div
+        h4 
+          b Quer adicionar um post relativo ao ficheiro?
+        input.w3-radio(type='radio', name='post' value='true',onchange='showPost(true)')
+        label(for="sim") Sim
+        p
+        input.w3-radio(type='radio', name='post' value='false',checked="checked", onchange='showPost(false)')
+        label(for="nao") Não
+          div#post_titulo(style='display:none').w3-margin-top
+            label(for='post_titulo') 
+              b Título
+              input#post_titulo.w3-input(type='text', name='post_titulo')
+          div#post_descricao(style='display:none').w3-margin-top
+            label(for='post_descricao') 
+              b Descrição
+              input#post_descricao.w3-input(type='text', name='post_descricao')
+
+
+      input.w3-input(type="hidden" name="course" value=curso)
+      div
+        input.w3-input(type='submit', value='Adicionar Ficheiro').w3-button.w3-blue.w3-margin-top
+
+  script.
+    function addToList() {
+      var tag = document.getElementById("tagInput").value;
+      var div = document.getElementById("tags");
+      var input = document.createElement("input");
+      input.setAttribute("type", "hidden");
+      input.setAttribute("name", "tag");
+      input.setAttribute("value", tag);
+      var p = document.createElement("p");
+      p.setAttribute("class", "w3-tag w3-round w3-blue");
+      p.setAttribute("style", "display: inline-block; margin-left: 5px;");
+      p.innerHTML = tag + `<i class="fa fa-times" aria-hidden="true" style="margin-left: 5px; cursor: pointer;" onclick="removeTag(this)"></i>`;
+      div.appendChild(p);
+      div.appendChild(input);
+      document.getElementById("tagInput").value = "";
+    }
+
+    function removeTag(elem) {
+      var div = document.getElementById("tags");
+      console.log(elem.parentNode.nextSibling);  
+      div.removeChild(elem.parentNode.nextSibling);
+      div.removeChild(elem.parentNode);
+      // remove input
+    }
+
+    function showPost(show) {
+      if (show) {
+        document.getElementById("post_titulo").style.display = "block";
+        document.getElementById("post_descricao").style.display = "block";
+      } else {
+        document.getElementById("post_titulo").style.display = "none";
+        document.getElementById("post_descricao").style.display = "none";
+      }
+    }
+
+    

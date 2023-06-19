@@ -43,15 +43,27 @@ router.get('/:id', verificaAcesso ,function(req, res, next) {
 
 router.post('/register', function(req, res, next) {
   console.log("Register",req.body);
+  var affiliation = {};
+  if (req.body.afiliacao == "true") {
+    affiliation = {
+      university: req.body.universidade,
+      department: req.body.departamento,
+    }
+  }
+  console.log("Affiliation",affiliation);
+  
   UserModel.register(new UserModel({
-    username: req.body.username,
+    username: req.body.email,
     level : req.body.level,
+    affiliation: affiliation,
     active : true,
-    dateCreated : new Date().toISOString().substring(0,16)
+    name: req.body.name,
+    registerDate : new Date().toISOString().substring(0,16)
   }), 
   req.body.password, 
   function(err, user) {
     if (err) {
+      console.log('Erro no registo: ' + err);
       return res.status(520).jsonp({error: err});
     }
     else{
@@ -63,9 +75,13 @@ router.post('/register', function(req, res, next) {
 
 
 router.post('/login', passport.authenticate('local'), function(req, res){
+  console.log(req.user)
   jwt.sign({ 
     username: req.user.username,
     level: req.user.level,
+    name: req.user.name,
+    affiliation: req.user.affiliation,
+    registerDate: req.user.registerDate.toISOString().substring(0,16),
     sub: 'RPCW2023'}, 
     process.env.JWT_KEY,
     {expiresIn: '23h'},

@@ -17,7 +17,6 @@ const metaSchema = new mongoose.Schema({
     "description": String,
     "creationDate": Date,
     "registationDate": Date,
-    "visibility": String,
     "tags": [String],
     "theme": String,
     "ratings": [ratingSchema],

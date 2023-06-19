@@ -27,9 +27,8 @@ router.post("/",verifyJWT,function (req, res, nxt){
     title: body.title,
     subtitle: body.subtitle,
     description: body.description,
-    creationDate: body.creationDate,
+    creationDate: new Date(body.creationDate).toISOString().substring(0, 19),
     registationDate: new Date().toISOString().substring(0, 19),
-    visibility: body.visibility,
     tags: body.tags,
     theme: body.theme,
     ratings: [],
@@ -41,10 +40,27 @@ router.post("/",verifyJWT,function (req, res, nxt){
   }
   Meta.insert(meta)
     .then((meta) => {
-      res.status(201).send();
+      console.log(meta);
+      if (req.body.post) {
+        var post = {
+          "title": req.body.post_titulo,
+          "description": req.body.post_descricao,
+          "comments": [],
+          "publishedBy": req.user.username,
+          "id_meta": meta._id,
+        }
+        Curso.insertPost(meta.course, post).then((curso) => {
+          res.status(201).send();
+        }).catch((err) => { 
+          res.status(500).jsonp({error: err});
+        });
+      }
+      else {
+        res.status(201).send();
+      }
     })
     .catch((err) => {
-      nxt(err);
+      res.status(500).jsonp({error: err});
     });
 });
 
@@ -66,6 +82,7 @@ router.put("/:id",verifyJWT,verifyProfessor, function (req, res, nxt){
   }
   Meta.update(id,meta)
     .then((meta) => {
+
       res.status(201).send();
     })
     .catch((err) => {
