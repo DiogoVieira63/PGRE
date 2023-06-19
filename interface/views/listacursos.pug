@@ -10,11 +10,15 @@ block content
 				tr
 					th Nome
 					th Descrição
-					th Tipo
+					th Visibilidade
 				each curso in cursos
 					tr(onclick=`window.location.href='cursos/${curso._id}'`)
 						td= curso.nome
 						td= curso.descricao
-						td= curso.type
+						td 
+							if curso.visibilidade == 'privado'
+								i.w3-xlarge.fa.fa-lock
+							else
+								i.w3-xlarge.fa.fa-unlock 
 		footer.w3-indigo
 			address Generated in RPCW :: #{data}
