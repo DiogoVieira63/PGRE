@@ -1,0 +1,30 @@
+extends layout
+
+
+
+block content
+  h1.w3-center Criar Curso
+  .w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+    form.w3-form(action='/cursos', method='POST')
+      div
+        label(for='Nome')
+        b Nome
+        input.w3-input(type='text', name='nome', required='required')
+      div
+        label(for='Descricao')
+        b Descrição
+        input.w3-input(type='text', name='descricao', required='required')
+      div
+        h4
+          b Visibilidade
+        input.w3-radio(type='radio', name='visibilidade' value='publico' checked="checked")
+        label(for="publico") Público
+        p
+        input.w3-radio(type='radio', name='visibilidade' value='privado')
+        label(for="privado") Privado
+        p 
+        input.w3-radio(type='radio', name='visibilidade' value='convite')
+        label(for="convite") Convite        
+        div
+      div
+        input.w3-input(type='submit', value='Criar Curso').w3-button.w3-blue.w3-margin-top
