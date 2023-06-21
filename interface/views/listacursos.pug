@@ -11,6 +11,7 @@ block content
 					th Nome
 					th Descrição
 					th Visibilidade
+					th Inscrito
 				each curso in cursos
 					tr(onclick=`window.location.href='cursos/${curso._id}'`)
 						td= curso.nome
@@ -20,5 +21,10 @@ block content
 								i.w3-xlarge.fa.fa-lock
 							else
 								i.w3-xlarge.fa.fa-unlock 
+						td
+							if curso.isInscrito
+								i.w3-green.w3-xlarge.fa.fa-check
+							else
+								i.w3-red.w3-xlarge.fa.fa-times
 		footer.w3-indigo
 			address Generated in RPCW :: #{data}

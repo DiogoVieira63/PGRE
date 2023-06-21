@@ -9,4 +9,4 @@ const typeSchema = new mongoose.Schema({
 
 
 
-module.exports = mongoose.model('typeSchema', metaSchema);
+module.exports = mongoose.model('type', typeSchema);

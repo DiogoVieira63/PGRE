@@ -1,16 +1,19 @@
 extends layout
 
 block content
-  h1.w3-center Adicionar Ficheiro
-  .w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+  .w3-white.w3-card.w3-content.w3-margin-top.w3-margin-bottom
+    header.w3-container.w3-center(class=`w3-indigo`)
+      h1 Adicionar Ficheiro
     form.w3-container(action="/files" method="POST" enctype="multipart/form-data")
       div
         b Select File
         input.w3-input(type="file" name="file" required="required")
-      div
-        label
-          b Nome
-        input.w3-input(type="text" name="name" required="required")
+      div 
+        b Tipo de Ficheiro
+        each type in types
+          p
+            input.w3-radio(type='radio', name='type' value=type['id'])
+            label(for=type) #{type['id']}
       div
         label
             b Título

@@ -21,7 +21,8 @@ module.exports.insert = (curso,username) => {
 
 // add aluno to curso
 module.exports.addAluno = (id,username) => {
-    return Curso.findOneAndUpdate({nome : id},{$push : {alunos : username}}).then(curso => {
+    return Curso.findOneAndUpdate({_id : id},{$push : {alunos : username}}).then(curso => {
+        console.log(curso);
         return curso;
     }).catch(err => {
         return err;
@@ -30,7 +31,7 @@ module.exports.addAluno = (id,username) => {
 
 // add professor to curso
 module.exports.addProfessor = (id,username) => {
-    return Curso.findOneAndUpdate({nome : id},{$push : {professores : username}}).then(curso => {
+    return Curso.findOneAndUpdate({_id : id},{$push : {professores : username}}).then(curso => {
         return curso;
     }).catch(err => {
         return err;
@@ -165,23 +166,27 @@ module.exports.isProfessor = (idCurso, idProfessor) =>{
     });
 }
 
-module.exports.hasPermissionCurso = (idCurso, id,level) =>{
+module.exports.hasPermissionCurso = (id, idCurso,level) =>{
     if(level == "professor"){
         return Curso.findOne( {_id : idCurso, professores: id}).then(
-        _ => {
-        return true;
+        lista => {
+            return lista != null;
         }).catch(err => {
             return err;
         });}
     else if(level == "aluno"){
         return Curso.findOne( {_id : idCurso, alunos: id}).then(
-            _ => {
-            return true;
+            lista => {
+                console.log("Permission",lista);
+            return lista != null;
         }).catch(err => {
             return err;
         });
     }
-    else return true;
+    else {
+        console.log("Admin - true");
+        return true;
+    }
 }
 
 module.exports.editPost = (idcurso, idpost, post) => {

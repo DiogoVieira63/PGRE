@@ -30,42 +30,53 @@ block content
                         i.w3-xlarge.fa.fa-lock
                     else
                         i.w3-xlarge.fa.fa-unlock 
+            if !permission
+                // button to join course
+                form(action=`/cursos/${curso._id}/entrar`, method='POST')
+                    input.w3-button.w3-indigo.w3-margin(type='submit', value='Entar no Curso')
+    if permission
+        .w3-container.w3-half
+            .w3-container.w3-content
+            .w3-card-4.w3-margin
+                header.w3-container.w3-indigo
+                    h1 Posts do Curso
 
-    .w3-container.w3-half
-        .w3-container.w3-content
-        .w3-card-4.w3-margin
-            header.w3-container.w3-indigo
-                h1 Posts do Curso
+                each post in curso.posts       
+                    .w3-container
+                        .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
+                            p 
+                                b Título: 
+                                | #{post.title}
+                            p 
+                                b Descrição: 
+                                | #{post.description}
+                            p 
+                                b Publicado por: 
+                                | #{post.publishedBy}
 
-            each post in curso.posts       
-                .w3-container
-                    .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
-                        p 
-                            b Título: 
-                            | #{post.title}
-                        p 
-                            b Descrição: 
-                            | #{post.description}
-                        p 
-                            b Publicado por: 
-                            | #{post.publishedBy}
+        .w3-container.w3-half
+            .w3-container.w3-content
+            .w3-card-4.w3-margin
+                header.w3-container.w3-indigo
+                    h1(style="width:50%;display: inline")="Recursos do Curso"
+                        if level == "professor"
+                            span
+                                a.w3-circle.w3-button.w3-margin(href=`/cursos/${curso._id}/files/upload`)
+                                    i.fa.fa-plus
+                                
 
-    .w3-container.w3-half
-        .w3-container.w3-content
-        .w3-card-4.w3-margin
-            header.w3-container.w3-indigo
-                h1 Recursos do Curso
-            each meta in metas       
-                .w3-container(onclick=`showFile('${meta.id}','${meta.mimetype}')`)
-                    .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
-                        p 
-                            b Título: 
-                            | #{meta.title}
-                        p 
-                            b Subtítulo: 
-                            | #{meta.subtitle}
-                        p 
-                            b Publicado por: 
-                            | #{meta.uploadBy}
+                each meta in metas       
+                    .w3-container(onclick=`showFile('${meta.id}','${meta.mimetype}')`)
+                        .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
+                            p 
+                                b Título: 
+                                | #{meta.title}
+                            p 
+                                b Subtítulo: 
+                                | #{meta.subtitle}
+                            p 
+                                b Publicado por: 
+                                | #{meta.uploadBy}
+
 
 
