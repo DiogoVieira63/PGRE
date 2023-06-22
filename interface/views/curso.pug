@@ -31,6 +31,9 @@ block content
                         i.w3-xlarge.fa.fa-lock
                     else
                         i.w3-xlarge.fa.fa-unlock 
+            if edit 
+                button.w3-btn.w3-round.w3-margin(class=`w3-amber`)
+                    a(href="/cursos/"+curso._id+"/edit") Edit
             if !permission
                 // button to join course
                 form(action=`/cursos/${curso._id}/entrar`, method='POST')
@@ -42,52 +45,43 @@ block content
                 header.w3-container.w3-indigo
                     h1 Posts do Curso
 
-            button.w3-btn.w3-round.w3-margin(class=`w3-amber`)
-                a(href="/cursos/"+curso._id+"/edit") Edit
+                each post in curso.posts       
+                    .w3-container
+                        .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
+                            p   
+                                b Título: 
+                                | #{post.title}
+                            p 
+                                b Descrição: 
+                                | #{post.description}
+                            - let publishedByProf = profs.find(prof => prof.username === post.publishedBy)
+                            p 
+                                b Publicado por: 
+                                | #{publishedByProf.name} (#{publishedByProf.username})
 
-    .w3-container.w3-half
-        .w3-container.w3-content
-        .w3-card-4.w3-margin
-            header.w3-container.w3-indigo
-                h1 Posts do Curso
-
-            each post in curso.posts       
-                .w3-container
-                    .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
-                        p   
-                            b Título: 
-                            | #{post.title}
-                        p 
-                            b Descrição: 
-                            | #{post.description}
-                        - let publishedByProf = profs.find(prof => prof.username === post.publishedBy)
-                        p 
-                            b Publicado por: 
-                            | #{publishedByProf.name} (#{publishedByProf.username})
-                        
-                        p.w3-center
-                            a.w3-button.w3-grey.w3-round(href=`/cursos/${curso._id}/posts/${post._id}`) Ver mais
+                            p.w3-center
+                                a.w3-button.w3-grey.w3-round(href=`/cursos/${curso._id}/posts/${post._id}`) Ver mais
 
 
-    .w3-container.w3-half
-        .w3-container.w3-content
-        .w3-card-4.w3-margin
-            header.w3-container.w3-indigo
-                h1(style="width:50%;display: inline")="Recursos do Curso"
-                        if level == "professor"
-                            span
-                                a.w3-circle.w3-button.w3-margin(href=`/cursos/${curso._id}/files/upload`)
-                                    i.fa.fa-plus
-            each meta in metas       
-                .w3-container(onclick=`showFile('${meta.id}','${meta.mimetype}')`)
-                    .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
-                        p 
-                            b Título: 
-                            | #{meta.title}
-                        p 
-                            b Subtítulo: 
-                            | #{meta.subtitle}
-                        - let uploadBy = profs.find(prof => prof.username === meta.uploadBy)
-                        p 
-                            b Publicado por: 
-                            | #{uploadBy.name} (#{uploadBy.username})
+        .w3-container.w3-half
+            .w3-container.w3-content
+            .w3-card-4.w3-margin
+                header.w3-container.w3-indigo
+                    h1(style="width:50%;display: inline")="Recursos do Curso"
+                            if level == "professor"
+                                span
+                                    a.w3-circle.w3-button.w3-margin(href=`/cursos/${curso._id}/files/upload`)
+                                        i.fa.fa-plus
+                each meta in metas       
+                    .w3-container(onclick=`showFile('${meta.id}','${meta.mimetype}')`)
+                        .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
+                            p 
+                                b Título: 
+                                | #{meta.title}
+                            p 
+                                b Subtítulo: 
+                                | #{meta.subtitle}
+                            - let uploadBy = profs.find(prof => prof.username === meta.uploadBy)
+                            p 
+                                b Publicado por: 
+                                | #{uploadBy.name} (#{uploadBy.username})

@@ -175,12 +175,17 @@ router.get('/cursos/:id',checkLoggin, function(req, res, next) {
       console.log(dados.data)
       Dados.getAllByCourse(req.params.id,req.cookies['token'])
         .then(metas => {
-          Auth.getNames(dados.data.professores,req.cookies['token']).then(nomes => {
+          console.log("PROFS",dados.data.curso.professores)
+          Auth.getNames(dados.data.curso.professores,req.cookies['token']).then(nomes => {
             console.log("Users: "+ nomes.data)
 
             console.log("METAS: "+ metas.data)
             console.log("NAMES: ", nomes.data)
-            res.render('curso', { curso: dados.data, profs:nomes.data,metas: metas.data.metas, data: data})
+            let edit = false
+            if (dados.data.curso.regente == req.user.username){
+              edit = true
+            }
+            res.render('curso', { curso: dados.data.curso, profs:nomes.data,metas: metas.data.metas, permission:dados.data.permission, edit:edit})
           })
           .catch(err => res.render('error', {error: err}));
           // console.log(dados.data)
