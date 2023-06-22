@@ -225,6 +225,20 @@ module.exports.editPost = (idcurso, idpost, post) => {
 
 }
 
+module.exports.editCurso = (idcurso, curso) => {
+    return Curso.updateOne(
+        {_id: idcurso},
+        {$set: curso}
+    ).then(curso => {
+        return curso;
+    }).catch(err => {
+        return err;
+    });
+}
+
+
+
+
 
 /*
 module.exports.getOne = (id) => {

@@ -12,6 +12,11 @@ module.exports.getOne = (id, token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.get(`${url}/meta/files/${id}`,{headers: { Cookie: `token=${token}` }});
 }
+module.exports.getOneDownload = (id, token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/meta/files/download/${id}`,{headers: { Cookie: `token=${token}` }});
+}
+
 
 module.exports.getAllByCourse = (id,token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;  
@@ -50,6 +55,11 @@ module.exports.createCurso = (curso,token) => {
     return axios.post(`${url}/cursos/create`, {curso: curso},{headers: { Cookie: `token=${token}` }});
 }
 
+module.exports.editarCurso = (curso,body,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/cursos/edit/${curso}`,body,{headers: { Cookie: `token=${token}` }});
+}
+
 module.exports.getProfile = (token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.get(`${url}/cursos/profile`,{headers: { Cookie: `token=${token}` }});
@@ -64,4 +74,27 @@ module.exports.entrarCurso = (idCurso,token) => {
 module.exports.getTypesActives = (token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.get(`${url}/meta/types/active`,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.rateFile = (idFile,rate,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/meta/files/${idFile}/rating`, {rate: rate},{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.rateFileEdit = (idFile,rate,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.put(`${url}/meta/files/${idFile}/rating`, {rate: rate},{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.rateFileDelete = (idFile,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.delete(`${url}/meta/files/${idFile}/rating`,{headers: { Cookie: `token=${token}` }});
+}
+
+
+
+module.exports.register = (user) => {
+    console.log("user",user);
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/noticias`, {username: user});
 }

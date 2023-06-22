@@ -66,7 +66,7 @@ block content
                                 
 
                 each meta in metas       
-                    .w3-container(onclick=`showFile('${meta.id}','${meta.mimetype}')`)
+                    .w3-container
                         .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
                             p 
                                 b Título: 
@@ -77,6 +77,32 @@ block content
                             p 
                                 b Publicado por: 
                                 | #{meta.uploadBy}
+                            if level == "aluno"
+                              span 
+                                  b Rating: 
+                                  - var met = meta.rated ? 'edit' : ''
+                                  form(action=`/cursos/${curso._id}/files/${meta._id}/rate/${met}`, method="POST", style="display: inline")
+                                      select.w3-select(name='rating',onchange=`this.form.submit()`, style="width: 50px", defaultValue="")
+                                          option(value="" selected)
+                                          each number in [1,2,3,4,5]
+                                            - console.log(meta.rating)
+                                            if meta.rating == number
+                                              option(value=number, selected) #{number}
+                                            else
+                                              option(value=number) #{number}
+                            if average
+                              p 
+                                  b Média de Rating: 
+                                  | #{average} 
+                            // Open button
+                            button.w3-margin-top.w3-button.w3-indigo.w3-display-bottomright(onclick=`showFile('${meta.id}','${meta.mimetype}')`) Open
+                             
+    
+                                
+
+
+
+
 
 
 

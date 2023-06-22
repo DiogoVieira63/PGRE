@@ -25,6 +25,10 @@ html
             i.fa.fa-user
             .w3.text.w3-medium Perfil
           a.w3-bar-item.w3-button.w3-right(href="/")
-            i.fa.fa-bell
-            .w3.text.w3-medium Notificações
+            if notificacoes > 0
+              i.fa.fa-bell.w3-text-red
+              .w3.text.w3-medium.w3-text-red Notificações
+            else
+              i.fa.fa-bell
+              .w3.text.w3-medium Notificações
     block content

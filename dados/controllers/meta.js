@@ -26,12 +26,26 @@ module.exports.getAll = (level) => {
 module.exports.getOne = (id) => {
     return Meta.findOne({ _id: id })
     .then(meta => {
+        console.log(meta);
         return meta;
     })
     .catch(err => {
         return err;
     })
 }
+
+module.exports.getOneId = (id) => {
+    return Meta.findOne({ id: id })
+    .then(meta => {
+        console.log(meta);
+        return meta;
+    })
+    .catch(err => {
+        return err;
+    })
+}
+
+
 
 
 module.exports.getAllByCourse = (course) => {
@@ -72,8 +86,8 @@ module.exports.addRating = (id, rating) => {
     })
 }
 
-module.exports.removeRating = (id, rating) => {
-    return Meta.updateOne({ _id: id }, { $pull: { ratings: rating } })
+module.exports.deleteRating = (id, user) => {
+    return Meta.updateOne({ _id: id }, { $pull: { ratings: { id: user } } })
     .then(meta => {
         return meta;
     })

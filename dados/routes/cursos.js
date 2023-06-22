@@ -5,6 +5,7 @@ var fs = require("fs");
 
 const url = "mongodb://127.0.0.1/PGRE";
 const Curso = require("../controllers/curso");
+const Noticia = require("../controllers/noticia");
 
 const ObjectId = require("mongoose").Types.ObjectId;
 var jwt = require('jsonwebtoken');
@@ -56,13 +57,13 @@ router.get("/meuscursos",verifyJWT,function (req, res) {
 router.get("/profile",verifyJWT,function (req, res, nxt) {
     console.log(req.user.username)
     Curso.findByAluno(req.user.username).then((cursos) => {
-        console.log("CURSOS: "+cursos)
-        console.log("USER: "+req.user)
-
-        res.status(200).jsonp({cursos: cursos, user: req.user});
-    }
-    ).catch((err) => {
-        nxt(err);
+        Noticia.get(req.user.username).then((noticias) => {
+            res.status(200).jsonp({cursos: cursos, noticias: noticias, user: req.user});
+        }).catch((err) => {
+            res.status(500).jsonp({error: err});
+        });
+    }).catch((err) => {
+        res.status(500).jsonp({error: err});
     });
 });
 
@@ -96,6 +97,9 @@ router.delete("/:curso/removealuno/:studentid",/*verifyJWT,verifyRegente*/functi
       nxt(err);
   });
 });
+
+
+
 
 router.delete("/:curso/removeprofessor/:profid",/*verifyJWT,verifyRegente*/function (req, res, nxt) {
   // remover metas que apenas pertencem a este curso, depois
@@ -190,6 +194,16 @@ router.post("/:curso/:post/edit"/*,verifyJWT,verifyProfessor*/,function (req, re
   });
 });
 
+router.post("/:curso/edit",verifyJWT,verifyCourse,verifyProfessor,function (req, res, nxt) {
+    Curso.editCurso(req.params.curso,req.body).then((curso) => {
+        res.status(201).jsonp(curso);
+    }).catch((err) => {
+        nxt(err);
+    });
+
+});
+
+
 router.get("/:curso/entrar",verifyJWT,function (req, res, nxt) {
     var curso = req.params.curso;
     var username = req.user.username;
@@ -200,6 +214,12 @@ router.get("/:curso/entrar",verifyJWT,function (req, res, nxt) {
         nxt(err);
     });
 });
+
+
+//return axios.post(`${url}/cursos/${idCurso}/rate/${idFile}`, {rate: rate},{headers: { Cookie: `token=${token}` }});
+
+
+
 
 
 

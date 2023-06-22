@@ -130,3 +130,16 @@ teste/exame, problema resolvido)
 ## Profile Page
 - User Info ✅
 - Edit Info ✅
+
+
+## Pedidos
+
+
+### Professor
+- Acesso Curso (Aluno)
+
+### Admin
+- Adicionar Tipo
+- Criar Curso
+- Remover Curso
+

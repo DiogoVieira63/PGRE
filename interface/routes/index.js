@@ -21,13 +21,15 @@ const upload = multer({ dest: 'public/fileStore'  ,
 
 
 /* GET home page. */
-
 function checkLoggin(req, res, next) {
   if (req.cookies['token']) {
     Dados.getProfile(req.cookies['token']).then(dados => {
       //console.log("Dados",dados.data);
       req.user = dados.data.user;
       req.cursos = dados.data.cursos;
+      req.noticias = dados.data.noticias;
+      console.log("Noticias",req.noticias);
+
       next();
     }).catch(err => {
       console.log("Erro",err);
@@ -45,7 +47,16 @@ router.get('/',checkLoggin, function(req, res, next) {
     .then(dados => {
       //console.log("Cursos",dados.data);
       data =  new Date().toISOString().substring(0, 16)
-      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos"});
+      let notificacoes = req.noticias.notificacao;
+      let notificacoesNaoLidas = 0;
+      for (let i = 0; i < notificacoes.length; i++) {
+        if (notificacoes[i].lida == false){
+          notificacoesNaoLidas++;
+        }
+      }
+      console.log("Notificações",notificacoesNaoLidas);
+    
+      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos", notificacoes: notificacoesNaoLidas});
     })
     .catch(err => res.render('error', {error: err}));
   // Dados.getAllFiles(req.cookies['token'])
@@ -73,6 +84,67 @@ router.get('/cursos/:curso/files/upload',checkLoggin, function(req, res, next) {
       res.render('error', {error: err
       }));
 });
+
+
+router.post('/cursos/:curso/files/:idFile/rate',checkLoggin, function(req, res, next) {
+
+
+  if (req.body.rating == ""){
+    Dados.rateFileDelete(req.params.idFile,req.cookies['token']).then(dados => {
+      res.redirect('/cursos/'+req.params.curso);
+      //res.jsonp(dados.data);
+    }).catch(err => {
+      res.status(500).jsonp({error: err});
+    });
+  }
+  else{
+    let cookie = req.cookies['token'];
+    let rating = req.body.rating;
+    Dados.rateFile(req.params.idFile,rating,cookie).then(dados => {
+      res.redirect('/cursos/'+req.params.curso);
+      //res.jsonp(dados.data);
+    }).catch(err => {
+      res.status(500).jsonp({error: err});
+    });
+  }
+});
+
+router.get('/download/:filename',checkLoggin, function(req, res) {
+  Dados.getOneDownload(req.params.filename,req.cookies['token']).then(dados => {
+    console.log("Dados",dados.data.meta);
+    res.download(__dirname + "/../public/fileStore/" + req.params.filename,dados.data.meta.name);
+  }).catch(err => {
+    res.status(500).jsonp({error: err});
+  });
+});
+
+router.post('/cursos/:curso/files/:idFile/rate/edit',checkLoggin, function(req, res, next) {
+
+  if (req.body.rating == ""){
+    Dados.rateFileDelete(req.params.idFile,req.cookies['token']).then(dados => {
+      res.redirect('/cursos/'+req.params.curso);
+      //res.jsonp(dados.data);
+    }).catch(err => {
+      res.status(500).jsonp({error: err});
+    });
+  }
+  else{
+    let cookie = req.cookies['token'];
+    let rating = req.body.rating;
+    Dados.rateFileEdit(req.params.idFile,rating,cookie).then(dados => {
+      res.redirect('/cursos/'+req.params.curso);
+      //res.jsonp(dados.data);
+    }).catch(err => {
+      res.status(500).jsonp({error: err});
+    });
+}
+
+});
+
+
+
+
+
 
 
 function getArrayLevel(user,curso){
@@ -126,10 +198,27 @@ router.get('/meuscursos',checkLoggin, function(req, res, next) {
 router.get('/cursos/:id',checkLoggin, function(req, res, next) {
   Dados.getOneCurso(req.params.id,req.cookies['token'])
     .then(dados => {
-      console.log(dados.data)
       Dados.getAllByCourse(req.params.id,req.cookies['token'])
         .then(metas => {
-          res.render('curso', { curso: dados.data.curso, metas: metas.data.metas, permission: dados.data.permission, level: req.user.level});
+          var files = metas.data.metas;
+          let ratings = 0;
+          let total = 0;
+
+          for (var i = 0; i < metas.data.metas.length; i++) {
+            for (var j = 0; j < files[i].ratings.length; j++) {
+              if (files[i].ratings[j].id == req.user.username){
+                files[i].rated = true;
+                files[i].rating = files[i].ratings[j].value;
+                ratings += files[i].ratings[j].value;
+                total++;
+              }
+            }
+          }
+          if (total != 0){
+            var average = ratings/total;
+          }
+ 
+          res.render('curso', { curso: dados.data.curso, metas: metas.data.metas, permission: dados.data.permission, level: req.user.level, average: average});
         })
         .catch(err => res.render('error', {error: err}));
     })
@@ -282,9 +371,28 @@ router.get('/profile/edit',checkLoggin, function(req, res, next) {
 });
 
 
+
+
+router.post('/cursos/:id/edit',checkLoggin, function(req, res, next) {
+  let cookie = req.cookies['token'];
+  Dados.editCurso(req.params.id,req.body,cookie).then(dados => {
+    res.redirect('/cursos/'+req.params.id);
+    //res.jsonp(dados.data);
+  }
+  ).catch(err => {
+    res.status(500).jsonp({error: err});
+  });
+});
+
+
+
 router.post('/register',function(req, res, next) {
   Auth.register(req.body).then(dados => {
-    res.redirect('/');
+    Dados.register(req.body.email).then(dados => {
+      res.redirect('/');
+    }).catch(err => {
+      res.render('error', {error: err});
+    });
   }
   ).catch(err => {
     res.render('error', {error: err});

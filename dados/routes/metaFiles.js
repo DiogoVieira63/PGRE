@@ -132,39 +132,44 @@ router.get("/",verifyJWT, function (req, res) {
 
 // get one file
 router.get("/:id", function(req, res, nxt){
+
+  console.log("id: "+req.params.id);
+
   Meta.getOne(req.params.id).then((meta) => {
-    let mimetype = meta.mimetype;
-    const readStream = req.gfs.openDownloadStream(new ObjectId(req.params.id));
-    readStream.on("error", function(err){
-      nxt(err);
-    });
-    console.log("mimetype: " + mimetype);
-    res.set("Content-Type", mimetype);
-    readStream.pipe(res);
+    res.jsonp({meta : meta});
   }).catch((err) => {
-    nxt(err);
+    console.log(err);
+    res.status(500).jsonp({error: err});
+    // nxt(err);
   });
 });
 
-// add rating
-router.post(".:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
-  var id = req.params.id;
-  var rating = req.body.rating;
-  var user = req.user.id;
-  Meta.addRating(id, user, rating)
-    .then((meta) => {
-      res.status(201).send();
-    })
-    .catch((err) => {
-      nxt(err);
-    });
+router.get("/download/:id", function(req, res, nxt){
+
+  Meta.getOneId(req.params.id).then((meta) => {
+    res.jsonp({meta : meta});
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).jsonp({error: err});
+    // nxt(err);
+  });
 });
 
-// delete rating
-router.delete("/:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
+
+
+
+
+// add rating
+router.post("/:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
   var id = req.params.id;
-  var user = req.user.id;
-  Meta.deleteRating(id, user)
+  var rating = req.body.rate;
+  var user = req.user.username;
+  var rate ={
+    id: user,
+    value: rating,
+  }
+  console.log("rate: "+rate);
+  Meta.addRating(id, rate)
     .then((meta) => {
       res.status(201).send();
     })
@@ -176,9 +181,13 @@ router.delete("/:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
 // edit rating
 router.put("/:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
   var id = req.params.id;
-  var rating = req.body.rating;
-  var user = req.user.id;
-  Meta.editRating(id, user, rating)
+  var rating = req.body.rate;
+  var user = req.user.username;
+  var rate ={
+    id: user,
+    value: rating,
+  }
+  Meta.editRating(id,rate)
     .then((meta) => {
       res.status(201).send();
     })
@@ -186,6 +195,22 @@ router.put("/:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
       nxt(err);
     });
 });
+
+
+
+// delete rating
+router.delete("/:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
+  var id = req.params.id;
+  var user = req.user.username;
+  Meta.deleteRating(id, user)
+    .then((meta) => {
+      res.status(201).send();
+    })
+    .catch((err) => {
+      nxt(err);
+    });
+});
+
 
 
 
