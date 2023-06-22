@@ -17,8 +17,7 @@ const verifyCourse = Permission.course;
 
 router.get("/",verifyJWT,function (req, res) {
     Curso.getAll().then((data) => {
-        console.log("Cursos",data);  
-        res.jsonp(data);
+        res.json(data);
     }).catch((err) => {
         console.log(err);
         res.status(500).jsonp({error: err});
@@ -94,10 +93,9 @@ router.get("/:curso/posts/:post"/*,verifyJWT,verifyCourse*/,function (req, res, 
   });
 
 
-router.get("/:curso",verifyJWT,function (req, res) {
+router.get("/:curso",verifyJWT,verifyCourse,function (req, res) {
     Curso.getOne(req.params.curso).then((data) => {
-        console.log("Cursos",data);  
-        res.jsonp(data);
+        res.jsonp({ curso: data, permission:req.permission});
     }).catch((err) => {
         console.log(err);
         res.status(500).jsonp({error: err});
@@ -216,5 +214,18 @@ router.post("/:curso/:post/edit"/*,verifyJWT,verifyProfessor*/,function (req, re
       nxt(err);
   });
 });
+
+router.get("/:curso/entrar",verifyJWT,function (req, res, nxt) {
+    var curso = req.params.curso;
+    var username = req.user.username;
+    Curso.addAluno(curso,username)
+    .then((curso) => {
+        res.status(201).jsonp(curso);
+    }).catch((err) => {
+        nxt(err);
+    });
+});
+
+
 
 module.exports = router;

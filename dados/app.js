@@ -47,7 +47,7 @@ app.use(function (req, res, next) {
 });
 
 var metaFilesRouter = require("./routes/metaFiles");
-var metaTypesRouter = require("./routes/metaTypes");
+var metaTypesRouter = require("./routes/metaTypes.js");
 var cursosRouter = require("./routes/cursos");
 
 app.use("/meta/files", metaFilesRouter);

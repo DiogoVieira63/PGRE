@@ -37,7 +37,8 @@ module.exports.getAll = () => {
 
 
 module.exports.getActives = () => {
-    return Type.find({state: "active"}).then(type => {
+    return Type.find({state: "active"}).sort({id: 1}).then(type => {
+        console.log("Types",type);
         return type;
     }).catch(err => {
         return err;

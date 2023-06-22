@@ -4,8 +4,8 @@ extends layout
 
 block content
   h1.w3-center Registo
-  .w3-card-4.w3-content.w3-padding.w3-margin-top
-    form.w3-form(action='register', method='POST').w3-white
+  .w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+    form.w3-form(action='register', method='POST')
       div
         label(for='email') 
         b Email
@@ -46,7 +46,7 @@ block content
                 each departamento in departamentos 
                   option(value=departamento) #{departamento}
       div
-        input.w3-input(type='submit', value='Register').w3-button.w3-blue.w3-margin-top
+        input.w3-input(type='submit', value='Registar').w3-button.w3-blue.w3-margin-top
 
   script.
     function showInstituicao(show) {

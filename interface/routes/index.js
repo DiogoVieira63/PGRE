@@ -24,8 +24,15 @@ const upload = multer({ dest: 'public/fileStore'  ,
 
 function checkLoggin(req, res, next) {
   if (req.cookies['token']) {
-    console.log(req.body);
-    next();
+    Dados.getProfile(req.cookies['token']).then(dados => {
+      //console.log("Dados",dados.data);
+      req.user = dados.data.user;
+      req.cursos = dados.data.cursos;
+      next();
+    }).catch(err => {
+      console.log("Erro",err);
+      res.redirect('/no_login');
+    });
   }
   else{
     res.redirect('/no_login');
@@ -57,8 +64,14 @@ router.get('/cursos/form',checkLoggin, function(req, res, next) {
 });
 
 router.get('/cursos/:curso/files/upload',checkLoggin, function(req, res, next) {
-  console.log("FileForm");
-  res.render('fileForm',{curso: req.params.curso});
+
+  Dados.getTypesActives(req.cookies['token'])
+    .then(dados => {
+      console.log("Tipos",dados.data);
+      res.render('fileForm',{curso: req.params.curso, types: dados.data});
+    }).catch(err => 
+      res.render('error', {error: err
+      }));
 });
 
 router.get('/cursos/:id/posts/:idpost',checkLoggin, function(req, res, next) {
@@ -75,13 +88,32 @@ router.get('/cursos/:id/posts/:idpost',checkLoggin, function(req, res, next) {
     .catch(err => res.render('error', {error: err}));
 });
 
+function getArrayLevel(user,curso){
+  if (user.level == "aluno"){
+    return curso.alunos;
+  }
+  else if (user.level == "professor"){
+    return curso.professores;
+  }
+}
+
+
 router.get('/cursos',checkLoggin, function(req, res, next) {
   console.log(req.cookies['token'])
   Dados.getAllCursos(req.cookies['token'])
     .then(dados => {
-      //console.log("Cursos",dados.data);
-      data =  new Date().toISOString().substring(0, 16)
-      res.render('listacursos', { cursos: dados.data, data: data, titulo: "Lista de Cursos"});
+      let data = dados.data;
+      for (var i = 0; i < data.length; i++) {
+        let array = getArrayLevel(req.user,data[i]);
+        if (array.includes(req.user.username)){
+          data[i].isInscrito = true;
+        }
+        else{
+          data[i].isInscrito = false;
+        }
+      }
+      date =  new Date().toISOString().substring(0, 16)
+      res.render('listacursos', { cursos: dados.data, data: date, titulo: "Lista de Cursos"});
     })
     .catch(err => res.render('error', {error: err}));
   // Dados.getAllCursos(req.cookies['token'])
@@ -94,7 +126,6 @@ router.get('/cursos',checkLoggin, function(req, res, next) {
 });
 
 router.get('/meuscursos',checkLoggin, function(req, res, next) {
-  console.log(req.cookies['token'])
   Dados.getMyCursos(req.cookies['token'])
     .then(dados => {
       //console.log("Cursos",dados.data);
@@ -139,10 +170,8 @@ router.get('/cursos/:id/alunos',checkLoggin, function(req, res, next) {
 });
 
 router.get('/cursos/:id',checkLoggin, function(req, res, next) {
-  console.log(req.cookies['token'])
   Dados.getOneCurso(req.params.id,req.cookies['token'])
     .then(dados => {
-      data =  new Date().toISOString().substring(0, 16)
       console.log(dados.data)
       Dados.getAllByCourse(req.params.id,req.cookies['token'])
         .then(metas => {
@@ -177,15 +206,15 @@ router.get('/register', function(req, res, next) {
   // TODO : Universidades disponiveis
   let universidades = ["Universidade do Minho","Universidade do Porto","Universidade de Lisboa"];
   let departamentos = ["Departamento de Informática","Departamento de Física","Departamento de Matemática"];
-  res.render('register',{instituicoes: universidades, departamentos: departamentos});
+  res.render('register',{instituicoes: universidades, departamentos: departamentos, no_bar: true});
 });
 
 router.get('/no_login', function(req, res, next) {
-  res.render('index');
+  res.render('index',{no_bar: true});
 });
 
 router.get('/login', function(req, res, next) {
-  res.render('login');
+  res.render('login',{no_bar: true});
 });
 
 
@@ -269,6 +298,18 @@ router.get('/files/:id',checkLoggin, function(req, res, next) {
   });
 });
 */
+
+router.post('/cursos/:id/entrar',checkLoggin, function(req, res, next) {
+  let cookie = req.cookies['token'];
+  Dados.entrarCurso(req.params.id,cookie).then(dados => {
+    res.redirect('/cursos/'+req.params.id);
+    //res.jsonp(dados.data);
+  }
+  ).catch(err => {
+    res.status(500).jsonp({error: err});
+  });
+});
+
 
 
 router.get('/profile',checkLoggin, function(req, res, next) {

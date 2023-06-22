@@ -26,15 +26,14 @@ function token(req, res, next) {
 }
 
 function course(req, res, next) {
-  var course = req.params.course;
-  var id = req.user.id;
-  Curso.hasPermission(id, course)
+  var curso = req.params.curso;
+  var id = req.user.username;
+  var level = req.user.level;
+  console.log("User",req.user,req.params)
+  Curso.hasPermissionCurso(id, curso, level)
     .then((hasPermission) => {
-      if (hasPermission) {
-        next();
-      } else {
-        res.status(403).send();
-      }
+      req.permission = hasPermission;
+      next();
     })
     .catch((err) => {
       console.log("ERRO PERMISSAO: "+err)

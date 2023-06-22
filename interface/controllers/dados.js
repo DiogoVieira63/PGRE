@@ -60,3 +60,13 @@ module.exports.getOnePost = (id,idpost,token) => {
     return axios.get(`${url}/cursos/${id}/posts/${idpost}`,{headers: { Cookie: `token=${token}` }});
 }
 
+module.exports.entrarCurso = (idCurso,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/cursos/${idCurso}/entrar`,{headers: { Cookie: `token=${token}` }});
+}
+
+
+module.exports.getTypesActives = (token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/meta/types/active`,{headers: { Cookie: `token=${token}` }});
+}
