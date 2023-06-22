@@ -5,6 +5,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
 const OauthStrategy = require('passport-oauth2').Strategy;
+var cookieParser = require("cookie-parser");
 
 
 
@@ -31,6 +32,7 @@ var authRouter = require('./routes/auth');
 
 var app = express();
 
+app.use(cookieParser());
 
 app.use(session({
   genid: req => {

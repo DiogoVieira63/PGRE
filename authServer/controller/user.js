@@ -11,7 +11,7 @@ module.exports.list = () => {
     })
 }
 
-module.exports.getUser= id => {
+module.exports.getUser = id => {
     return User.findOne({username: id})
     .then(user => {
         return user;
@@ -21,8 +21,8 @@ module.exports.getUser= id => {
     })
 }
 
-module.exports.updateUser = (id, user) => {
-    return User.updateOne({_id: id}, user)
+module.exports.updateUser = (email, user) => {
+    return User.updateOne({username: email}, user)
     .then(user => {
         return user;
     })

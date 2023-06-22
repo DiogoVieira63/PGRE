@@ -69,6 +69,7 @@ block content
       +createRow("Email", user.username)
       - if (user.affiliation)
         +createRowObject("Afiliação",{"Universidade": user.affiliation.university, "Departamento": user.affiliation.department})
+      - console.log(user)
       +createRow("Data de Registo", user.registerDate.substring(0,10))
       - if(cursos.length > 0)
         +createRowArray("Cursos", cursos)

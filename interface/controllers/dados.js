@@ -65,6 +65,11 @@ module.exports.getProfile = (token) => {
     return axios.get(`${url}/cursos/profile`,{headers: { Cookie: `token=${token}` }});
 }
 
+module.exports.getOnePost = (id,idpost,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/cursos/${id}/posts/${idpost}`,{headers: { Cookie: `token=${token}` }});
+}
+
 module.exports.entrarCurso = (idCurso,token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.get(`${url}/cursos/${idCurso}/entrar`,{headers: { Cookie: `token=${token}` }});
@@ -90,8 +95,6 @@ module.exports.rateFileDelete = (idFile,token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.delete(`${url}/meta/files/${idFile}/rating`,{headers: { Cookie: `token=${token}` }});
 }
-
-
 
 module.exports.register = (user) => {
     console.log("user",user);

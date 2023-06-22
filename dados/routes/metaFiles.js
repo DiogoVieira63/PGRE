@@ -156,9 +156,6 @@ router.get("/download/:id", function(req, res, nxt){
 });
 
 
-
-
-
 // add rating
 router.post("/:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
   var id = req.params.id;

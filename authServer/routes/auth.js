@@ -7,7 +7,9 @@ var jwt = require('jsonwebtoken');
 
 
 function verificaAcesso(req, res, next) {
-  var myToken = req.query.token || req.body.token;
+  console.log("COOKIES: ",req.cookies)
+  var myToken = req.cookies.token;
+  console.log("TOK: ",myToken)
   if (myToken) {
     jwt.verify(myToken, process.env.JWT_KEY, function(err, decoded) {
       if (err) {
@@ -33,6 +35,32 @@ router.get('/', verificaAcesso,function(req, res, next) {
     .catch(err => res.jsonp({error: err}));
 });
 
+router.get('/getNames', verificaAcesso,function(req, res, next) {
+  console.log("OLA")
+  console.log(req.query)
+  console.log(req.query.username_array)
+
+  let promises = [];
+  let array = req.query.username_array;
+  for (let i = 0; i<array.length; i++) {
+      promises.push(User.getUser(array[i]));
+  }
+
+  Promise.all(promises)
+  .then(users => {
+      let names = users.map((user, index) => {
+          return {
+              username: array[index],
+              name: user.name
+          };
+      });
+      console.log(names)
+      res.jsonp(names);
+  })
+  .catch(err => {
+      res.jsonp({error: err});
+  });
+});  
 
 router.get('/:id', verificaAcesso ,function(req, res, next) {
   User.getUser(req.params.id)
@@ -93,12 +121,40 @@ router.post('/login', passport.authenticate('local'), function(req, res){
 
 
 // update info user
-router.put('/update', verificaAcesso ,function(req, res, next) {
-  User.updateUser(req.user.id, req.body)
-    .then(data => res.jsonp(data))
-    .catch(err => res.jsonp({error: err}));
-});
+router.post('/update',verificaAcesso,function(req, res, next) {
+    console.log("USER: ",req.user)
+    console.log("INFO: ",req.body)
+    var user = req.user
+    var user_fields = req.body.user_fields
+    for (const [key, value] of Object.entries(user_fields)) {
+        if (key in user_fields){
+            user[key] = value
+        }
+    }
 
+    console.log("USER2: ", user)
+    User.updateUser(req.user.username, user)
+      .then(data => {
+        jwt.sign({ 
+          username: req.user.username,
+          level: req.user.level,
+          name: req.user.name,
+          affiliation: req.user.affiliation,
+          registerDate: req.user.registerDate,
+          sub: 'RPCW2023'}, 
+          process.env.JWT_KEY,
+          {expiresIn: '23h'},
+          function(e, token) {
+            if(e) res.status(500).jsonp({error: "Erro na geração do token: " + e}) 
+            else res.status(201).jsonp({token: token, info: data})
+        });
+      })
+      .catch(err => {
+        console.log(err)
+        res.jsonp({error: err})
+      })
+
+});
 
 // delete user
 router.delete('/delete', verificaAcesso ,function(req, res, next) {
