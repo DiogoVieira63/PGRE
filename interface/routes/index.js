@@ -142,9 +142,9 @@ router.get('/cursos/:id/edit',checkLoggin, function(req, res, next) {
     .then(dados => {
       data =  new Date().toISOString().substring(0, 16)
       console.log(dados.data)
-      Auth.getNames(dados.data.professores,req.cookies['token']).then(nomes => {
+      Auth.getNames(dados.data.curso.professores,req.cookies['token']).then(nomes => {
         let vis = ["privado","publico","convite"];
-        res.render('editcurso', { curso: dados.data, options: {visibility: vis}, profs:nomes.data})
+        res.render('editcurso', { curso: dados.data.curso, options: {visibility: vis}, profs:nomes.data})
       })
       .catch(err => res.render('error', {error: err}));
     })
@@ -158,7 +158,7 @@ router.get('/cursos/:id/alunos',checkLoggin, function(req, res, next) {
       data =  new Date().toISOString().substring(0, 16)
       console.log(dados.data)
       
-      Auth.getNames(dados.data.alunos,req.cookies['token']).then(nomes => {
+      Auth.getNames(dados.data.curso.alunos,req.cookies['token']).then(nomes => {
         data =  new Date().toISOString().substring(0, 16)
         res.render('alunos', {curso: dados.data.nome, alunos:nomes.data, data:data})
       })
@@ -185,7 +185,7 @@ router.get('/cursos/:id',checkLoggin, function(req, res, next) {
             if (dados.data.curso.regente == req.user.username){
               edit = true
             }
-            res.render('curso', { curso: dados.data.curso, profs:nomes.data,metas: metas.data.metas, permission:dados.data.permission, edit:edit})
+            res.render('curso', { curso: dados.data.curso, profs:nomes.data,metas: metas.data.metas, permission:dados.data.permission, edit:edit, level:req.user.level})
           })
           .catch(err => res.render('error', {error: err}));
           // console.log(dados.data)

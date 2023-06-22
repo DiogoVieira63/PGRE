@@ -31,7 +31,7 @@ mixin createRowArray(nome, key,tipo)
     td
       ul(id=key style="list-style: none;")
         li
-          input.w3-input.w3-round.w3-twothird(type=tipo name=key)
+          input.w3-input.w3-border.w3-round.w3-round.w3-twothird(type=tipo name=key)
           span.w3-right
             button.w3-button.w3-round.w3-right(onclick=`addToList("${key}")` type="button")
               i(class="fa fa-plus" aria-hidden="true" style="color: green;")
@@ -119,9 +119,6 @@ block content
       table.w3-table-all.w3-centered
         +createRow("Nome","nome", "text")
         +createRow("Descrição","descricao", "text")
-        tr
-            td
-                b Professores: 
         +createRowArray("Professores", "professores","text")       
         tr
           td
