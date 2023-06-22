@@ -101,3 +101,19 @@ module.exports.register = (user) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.post(`${url}/noticias`, {username: user});
 }
+
+module.exports.addPost= (body,username,token) => {
+    console.log(body)
+    let course = body.course 
+    var post = {
+        "title": body.title,
+        "description": body.description,
+        "comments": [],
+       "publishedBy": username,
+        "id_meta": "",
+    }
+    console.log("POST: ",post)
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/cursos/${course}/addpost`, post,{headers: { Cookie: `token=${token}` }});
+
+}

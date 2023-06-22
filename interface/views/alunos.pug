@@ -13,7 +13,8 @@ block content
 					th Ações
 				each aluno in alunos
 					tr
-						td= aluno.name
+						td
+							a(href=`/users/${aluno.id}`) #{aluno.name}
 						td= aluno.username
 						td 
 		footer.w3-indigo

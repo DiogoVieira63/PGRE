@@ -100,6 +100,21 @@ router.get("/:curso/posts/:post"/*,verifyJWT,verifyCourse*/,function (req, res, 
   });
 
 
+// verificar se é prof?
+router.post("/:curso/addpost"/*,verifyJWT,verifyProfessor,verifyCourse*/,function (req, res, nxt) {
+    var curso = req.params.curso;
+    var post = req.body;
+    // var username = req.user.username;
+    console.log("BODY:",req.body)
+    Curso.addPost(curso,post)
+    .then((curso) => {
+        res.status(201).jsonp(curso);
+    }).catch((err) => {
+        nxt(err);
+    });
+  });
+  
+
 router.get("/:curso",verifyJWT,verifyCourse,function (req, res) {
     Curso.getOne(req.params.curso).then((data) => {
         res.jsonp({ curso: data, permission:req.permission});
@@ -153,21 +168,6 @@ router.delete("/remove/:curso",/*verifyJWT,verifyRegente*/function (req, res, nx
       nxt(err);
   });
 });
-
-// verificar se é prof?
-router.post("/:curso/addpost"/*,verifyJWT,verifyProfessor,verifyCourse*/,function (req, res, nxt) {
-  var curso = req.params.curso;
-  var post = req.body;
-  // var username = req.user.username;
-  Curso.addPost(curso,post)
-  .then((curso) => {
-      res.status(201).jsonp(curso);
-  }).catch((err) => {
-      nxt(err);
-  });
-});
-
-
 
 router.post("/:curso/:post/addcomment"/*,verifyJWT,verifyCourse*/,function (req, res, nxt) {
   var curso = req.params.curso;

@@ -21,6 +21,17 @@ module.exports.getUser = id => {
     })
 }
 
+
+module.exports.getUserId = id => {
+    return User.findOne({_id: id})
+    .then(user => {
+        return user;
+    })
+    .catch(err => {
+        return err;
+    })
+}
+
 module.exports.updateUser = (email, user) => {
     return User.updateOne({username: email}, user)
     .then(user => {

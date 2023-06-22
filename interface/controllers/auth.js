@@ -24,3 +24,10 @@ module.exports.getNames = (username_array, token) => {
     let url = `http://localhost:${process.env.AUTH_PORT}`;
     return axios.get(`${url}/getNames`, {params:{username_array}, headers: {Cookie: `token=${token}`}});
 }
+
+module.exports.getUser = (id, token) => {
+    console.log(token)
+    console.log(id)
+    let url = `http://localhost:${process.env.AUTH_PORT}`;
+    return axios.get(`${url}/${id}`, {headers: { Cookie: `token=${token}` }});
+}

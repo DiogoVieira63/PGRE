@@ -51,7 +51,8 @@ router.get('/getNames', verificaAcesso,function(req, res, next) {
       let names = users.map((user, index) => {
           return {
               username: array[index],
-              name: user.name
+              name: user.name,
+              id: user._id
           };
       });
       console.log(names)
@@ -63,8 +64,13 @@ router.get('/getNames', verificaAcesso,function(req, res, next) {
 });  
 
 router.get('/:id', verificaAcesso ,function(req, res, next) {
-  User.getUser(req.params.id)
-    .then(data => res.jsonp(data))
+  console.log(req.params.id)
+  User.getUserId(req.params.id)
+    .then(data => {
+      console.log(data)
+      res.jsonp(data)
+      
+    })
     .catch(err => res.jsonp({error: err}));
 });
 

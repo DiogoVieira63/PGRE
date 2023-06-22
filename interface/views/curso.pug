@@ -20,7 +20,8 @@ block content
                     b Professores: 
                     ul
                     each prof in profs 
-                        li.w3-margin-left #{prof.name} (#{prof.username})
+                        li.w3-margin-left 
+                            a(href=`/users/${prof.id}`) #{prof.name} (#{prof.username})
                 p      
                     a(href=`/cursos/${curso._id}/alunos`)
                         b Nº de Alunos: 
@@ -43,7 +44,11 @@ block content
             .w3-container.w3-content
             .w3-card-4.w3-margin
                 header.w3-container.w3-indigo
-                    h1 Posts do Curso
+                    h1(style="width:50%;display: inline")="Posts do Curso"
+                            if level == "professor"
+                                span
+                                    a.w3-circle.w3-button.w3-margin(href=`/cursos/${curso._id}/addpost`)
+                                        i.fa.fa-plus
 
                 each post in curso.posts       
                     .w3-container
@@ -57,7 +62,7 @@ block content
                             - let publishedByProf = profs.find(prof => prof.username === post.publishedBy)
                             p 
                                 b Publicado por: 
-                                | #{publishedByProf.name} (#{publishedByProf.username})
+                                a(href=`/users/${publishedByProf.id}`) #{publishedByProf.name} (#{publishedByProf.username})
 
                             p.w3-center
                                 a.w3-button.w3-grey.w3-round(href=`/cursos/${curso._id}/posts/${post._id}`) Ver mais
@@ -84,7 +89,7 @@ block content
                             - let uploadBy = profs.find(prof => prof.username === meta.uploadBy)
                             p 
                                 b Publicado por: 
-                                | #{uploadBy.name} (#{uploadBy.username})
+                                a(href=`/users/${uploadBy.id}`) #{uploadBy.name} (#{uploadBy.username})
 
                             if level == "aluno"
                               span 

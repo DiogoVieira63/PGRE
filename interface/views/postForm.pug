@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  .w3-white.w3-card.w3-content.w3-margin-top.w3-margin-bottom
+    header.w3-container.w3-center(class=`w3-indigo`)
+      h1 Adicionar Post
+    form.w3-container(action="/posts" method="POST")
+      div
+        label
+            b Título
+        input.w3-input(type="text" name="title" required="required")
+      div
+        label
+            b Descrição
+        input.w3-input(type="text" name="description")
+
+      input.w3-input(type="hidden" name="course" value=curso)
+      div
+        input.w3-input(type='submit', value='Adicionar Ficheiro').w3-button.w3-blue.w3-margin-top

@@ -7,6 +7,4 @@ const typeSchema = new mongoose.Schema({
     "state": String // ('active', 'inactive','pending')
 })
 
-
-
 module.exports = mongoose.model('type', typeSchema);

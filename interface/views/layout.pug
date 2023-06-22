@@ -24,10 +24,14 @@ html
           a.w3-bar-item.w3-button.w3-right(href="/profile")
             i.fa.fa-user
             .w3.text.w3-medium Perfil
-          a.w3-bar-item.w3-button.w3-right(href="/")
+          .w3-bar-item.w3-button.w3-right.w3-dropdown-click(onclick="dropdown('notificacoes')") 
             if notificacoes > 0
               i.fa.fa-bell.w3-text-red
               .w3.text.w3-medium.w3-text-red Notificações
+              div#notificacoes.w3-dropdown-content.w3-bar-block.w3-border(style="display:none")
+                  a.w3-bar-item.w3-button(href="#") Link 1
+                  a.w3-bar-item.w3-button(href="#") Link 2
+                  a.w3-bar-item.w3-button(href="#") Link 3
             else
               i.fa.fa-bell
               .w3.text.w3-medium Notificações

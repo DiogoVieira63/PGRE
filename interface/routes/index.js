@@ -99,6 +99,25 @@ router.get('/cursos/:id/posts/:idpost',checkLoggin, function(req, res, next) {
     .catch(err => res.render('error', {error: err}));
 });
 
+router.get('/cursos/:id/addpost',checkLoggin, function(req, res, next) {
+  // console.log(req.cookies['token'])
+  res.render('postForm',{curso: req.params.id});
+});
+
+router.post('/posts',checkLoggin,function(req, res, next) {
+  console.log("Add Post");
+  console.log(req.body)
+  console.log("USER: ", req.user)
+  Dados.addPost(req.body,req.user.username,req.cookies['token']).then(dados => {
+    console.log("Post added");
+    res.redirect('/cursos/'+req.body.course);
+  }
+  ).catch(err => {
+    res.render('error', {error: err});
+    // res.status(500).jsonp({error: err});
+  });
+});
+
 router.post('/cursos/:curso/files/:idFile/rate',checkLoggin, function(req, res, next) {
 
 
@@ -412,7 +431,7 @@ router.get('/profile',checkLoggin, function(req, res, next) {
     Dados.getProfile(cookie).then(dados => {
       console.log(dados.data);
       console.log("USER: "+dados.data.user)
-      res.render('profile', {user: dados.data.user, cursos: dados.data.cursos});
+      res.render('profile', {user: dados.data.user, cursos: dados.data.cursos, profile:true});
     }
     ).catch(err => {
       res.render('error', {error: err});
@@ -472,4 +491,19 @@ router.post('/register',function(req, res, next) {
     res.render('error', {error: err});
   });
 });
+
+
+//FALTA IR BUSCAR CURSOS
+router.get('/users/:id',checkLoggin, function(req, res, next) {
+  let cookie = req.cookies['token'];
+  
+  Auth.getUser(req.params.id, cookie).then(dados => {
+    console.log("DADOS: ",dados.data);
+    res.render('profile', {user: dados.data, cursos: [], profile:false});
+  }
+  ).catch(err => {
+    res.render('error', {error: err});
+  });
+});
+
 module.exports = router;
