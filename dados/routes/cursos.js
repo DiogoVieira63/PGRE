@@ -56,16 +56,42 @@ router.get("/meuscursos",verifyJWT,function (req, res) {
 
 router.get("/profile",verifyJWT,function (req, res, nxt) {
     console.log(req.user.username)
-    Curso.findByAluno(req.user.username).then((cursos) => {
-        console.log("CURSOS: "+cursos)
-        console.log("USER: "+req.user)
+    if (req.user.level == "aluno"){
+        Curso.findByAluno(req.user.username).then((cursos) => {
+            console.log("CURSOS: "+cursos)
+            console.log("USER: "+req.user)
 
-        res.status(200).jsonp({cursos: cursos, user: req.user});
+            res.status(200).jsonp({cursos: cursos, user: req.user});
+        }
+        ).catch((err) => {
+            nxt(err);
+        });
     }
-    ).catch((err) => {
+    else{
+        Curso.findByProfessor(req.user.username).then((cursos) => {
+            console.log("CURSOS: "+cursos)
+            console.log("USER: "+req.user)
+
+            res.status(200).jsonp({cursos: cursos, user: req.user});
+        }
+        ).catch((err) => {
+            nxt(err);
+        });
+    }
+});
+
+
+router.get("/:curso/posts/:post"/*,verifyJWT,verifyCourse*/,function (req, res, nxt) {
+    var curso = req.params.curso;
+    var post = req.params.post;
+    // var username = req.user.username;
+    Curso.getOnePost(curso,post)
+    .then((curso) => {
+        res.status(201).jsonp(curso);
+    }).catch((err) => {
         nxt(err);
     });
-});
+  });
 
 
 router.get("/:curso",verifyJWT,function (req, res) {
@@ -132,7 +158,6 @@ router.post("/:curso/addpost"/*,verifyJWT,verifyProfessor,verifyCourse*/,functio
       nxt(err);
   });
 });
-
 
 
 

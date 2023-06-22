@@ -54,3 +54,9 @@ module.exports.getProfile = (token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.get(`${url}/cursos/profile`,{headers: { Cookie: `token=${token}` }});
 }
+
+module.exports.getOnePost = (id,idpost,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/cursos/${id}/posts/${idpost}`,{headers: { Cookie: `token=${token}` }});
+}
+

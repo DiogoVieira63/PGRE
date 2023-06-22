@@ -132,22 +132,27 @@ router.get("/",verifyJWT, function (req, res) {
 
 // get one file
 router.get("/:id", function(req, res, nxt){
+  console.log("ola")
   Meta.getOne(req.params.id).then((meta) => {
-    let mimetype = meta.mimetype;
-    const readStream = req.gfs.openDownloadStream(new ObjectId(req.params.id));
-    readStream.on("error", function(err){
-      nxt(err);
-    });
-    console.log("mimetype: " + mimetype);
-    res.set("Content-Type", mimetype);
-    readStream.pipe(res);
+    res.jsonp({meta : meta});
+
+    // let mimetype = meta.mimetype;
+    // const readStream = req.gfs.openDownloadStream(new ObjectId(req.params.id));
+    // readStream.on("error", function(err){
+    //   nxt(err);
+    // });
+    // console.log("mimetype: " + mimetype);
+    // res.set("Content-Type", mimetype);
+    // readStream.pipe(res);
   }).catch((err) => {
-    nxt(err);
+    console.log(err);
+    res.status(500).jsonp({error: err});
+    // nxt(err);
   });
 });
 
 // add rating
-router.post(".:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
+router.post("/:id/rating",verifyJWT, verifyCourse, function (req, res, nxt){
   var id = req.params.id;
   var rating = req.body.rating;
   var user = req.user.id;

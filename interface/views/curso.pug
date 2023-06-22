@@ -19,10 +19,11 @@ block content
                 p 
                     b Professores: 
                     ul
-                    each prof in curso.professores 
-                        li.w3-margin-left= prof
-                p 
-                    b Nº de Alunos: 
+                    each prof in profs 
+                        li.w3-margin-left #{prof.name} (#{prof.username})
+                p      
+                    a(href=`/cursos/${curso._id}/alunos`)
+                        b Nº de Alunos: 
                     | #{curso.alunos.length}
                 p
                     b Visibilidade: 
@@ -30,6 +31,9 @@ block content
                         i.w3-xlarge.fa.fa-lock
                     else
                         i.w3-xlarge.fa.fa-unlock 
+
+            button.w3-btn.w3-round.w3-margin(class=`w3-amber`)
+                a(href="/cursos/"+curso._id+"/edit") Edit
 
     .w3-container.w3-half
         .w3-container.w3-content
@@ -40,15 +44,20 @@ block content
             each post in curso.posts       
                 .w3-container
                     .w3-panel.w3-light-grey.w3-bottombar.w3-border-grey.w3-border.w3-display-container 
-                        p 
+                        p   
                             b Título: 
                             | #{post.title}
                         p 
                             b Descrição: 
                             | #{post.description}
+                        - let publishedByProf = profs.find(prof => prof.username === post.publishedBy)
                         p 
                             b Publicado por: 
-                            | #{post.publishedBy}
+                            | #{publishedByProf.name} (#{publishedByProf.username})
+                        
+                        p.w3-center
+                            a.w3-button.w3-grey.w3-round(href=`/cursos/${curso._id}/posts/${post._id}`) Ver mais
+
 
     .w3-container.w3-half
         .w3-container.w3-content
@@ -64,8 +73,9 @@ block content
                         p 
                             b Subtítulo: 
                             | #{meta.subtitle}
+                        - let uploadBy = profs.find(prof => prof.username === meta.uploadBy)
                         p 
                             b Publicado por: 
-                            | #{meta.uploadBy}
+                            | #{uploadBy.name} (#{uploadBy.username})
 
 

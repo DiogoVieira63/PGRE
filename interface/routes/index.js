@@ -34,6 +34,7 @@ function checkLoggin(req, res, next) {
 
 router.get('/',checkLoggin, function(req, res, next) {
   console.log('Página Inicial');
+  console.log(req.cookies['token'])
   Dados.getMyCursos(req.cookies['token'])
     .then(dados => {
       //console.log("Cursos",dados.data);
@@ -51,7 +52,6 @@ router.get('/',checkLoggin, function(req, res, next) {
   //   .catch(err => res.render('error', {error: err}));
 });
 
-
 router.get('/cursos/form',checkLoggin, function(req, res, next) {
   res.render('cursoForm');
 });
@@ -61,6 +61,19 @@ router.get('/cursos/:curso/files/upload',checkLoggin, function(req, res, next) {
   res.render('fileForm',{curso: req.params.curso});
 });
 
+router.get('/cursos/:id/posts/:idpost',checkLoggin, function(req, res, next) {
+  // console.log(req.cookies['token'])
+  Dados.getOnePost(req.params.id,req.params.idpost,req.cookies['token'])
+    .then(dados => {
+      Dados.getOne(dados.data.id_meta,req.cookies['token']).then(file => {
+        res.render('post',{post: dados.data, meta: file.data.meta});
+      }
+      ).catch(err => {
+        res.status(500).jsonp({error: err});
+      });
+    })
+    .catch(err => res.render('error', {error: err}));
+});
 
 router.get('/cursos',checkLoggin, function(req, res, next) {
   console.log(req.cookies['token'])
@@ -92,6 +105,39 @@ router.get('/meuscursos',checkLoggin, function(req, res, next) {
 });
 
 
+
+router.get('/cursos/:id/edit',checkLoggin, function(req, res, next) {
+  Dados.getOneCurso(req.params.id,req.cookies['token'])
+    .then(dados => {
+      data =  new Date().toISOString().substring(0, 16)
+      console.log(dados.data)
+      Auth.getNames(dados.data.professores,req.cookies['token']).then(nomes => {
+        let vis = ["privado","publico","convite"];
+        res.render('editcurso', { curso: dados.data, options: {visibility: vis}, profs:nomes.data})
+      })
+      .catch(err => res.render('error', {error: err}));
+    })
+    .catch(err => res.render('error', {error: err}));
+});
+
+router.get('/cursos/:id/alunos',checkLoggin, function(req, res, next) {
+  console.log(req.cookies['token'])
+  Dados.getOneCurso(req.params.id,req.cookies['token'])
+    .then(dados => {
+      data =  new Date().toISOString().substring(0, 16)
+      console.log(dados.data)
+      
+      Auth.getNames(dados.data.alunos,req.cookies['token']).then(nomes => {
+        data =  new Date().toISOString().substring(0, 16)
+        res.render('alunos', {curso: dados.data.nome, alunos:nomes.data, data:data})
+      })
+      .catch(err => res.render('error', {error: err}));
+      // console.log(dados.data)
+      // res.render('curso', { curso: dados.data, metas: metas.data.metas, data: data})
+    })
+    .catch(err => res.render('error', {error: err}));
+});
+
 router.get('/cursos/:id',checkLoggin, function(req, res, next) {
   console.log(req.cookies['token'])
   Dados.getOneCurso(req.params.id,req.cookies['token'])
@@ -100,8 +146,17 @@ router.get('/cursos/:id',checkLoggin, function(req, res, next) {
       console.log(dados.data)
       Dados.getAllByCourse(req.params.id,req.cookies['token'])
         .then(metas => {
-          console.log("METAS: "+ metas.data)
-          res.render('curso', { curso: dados.data, metas: metas.data.metas, data: data});
+          Auth.getNames(dados.data.professores,req.cookies['token']).then(nomes => {
+            console.log("Users: "+ nomes.data)
+
+            console.log("METAS: "+ metas.data)
+            console.log("NAMES: ", nomes.data)
+            res.render('curso', { curso: dados.data, profs:nomes.data,metas: metas.data.metas, data: data})
+          })
+          .catch(err => res.render('error', {error: err}));
+          // console.log(dados.data)
+          // res.render('curso', { curso: dados.data, metas: metas.data.metas, data: data})
+
         })
         .catch(err => res.render('error', {error: err}));
     })
@@ -231,7 +286,7 @@ router.get('/profile',checkLoggin, function(req, res, next) {
 router.get('/profile/edit',checkLoggin, function(req, res, next) {
   let cookie = req.cookies['token'];
   Dados.getProfile(cookie).then(dados => {
-    console.log(dados.data);
+    // console.log(dados.data);
     let universidades = ["Universidade do Porto","Universidade de Lisboa","Universidade do Minho"];
     let departamentos = ["Departamento de Informática","Departamento de Física","Departamento de Matemática"];
     res.render('editProfile', {user: dados.data.user, cursos: dados.data.cursos, options: {university: universidades, department: departamentos}});
@@ -241,6 +296,18 @@ router.get('/profile/edit',checkLoggin, function(req, res, next) {
   });
 });
 
+router.post('/profile/edit',function(req, res, next) {
+  let cookie = req.cookies['token'];
+  Auth.update(req.body, cookie).then(dados => {
+    let day = 1000 * 60 * 60 * 24;
+    res.cookie('token', dados.data.token, {maxAge: day});
+    console.log("Cookie Saved");
+    res.redirect('/profile');
+  }
+  ).catch(err => {
+    res.render('error', {error: err});
+  });
+});
 
 router.post('/register',function(req, res, next) {
   Auth.register(req.body).then(dados => {

@@ -18,8 +18,6 @@ var User = new Schema({
     registerDate: Date,
     lastAccessDate: Date
 });
-
-
 User.plugin(passportLocalMongoose);
 
 module.exports = mongoose.model('user', User);

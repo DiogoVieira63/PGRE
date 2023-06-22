@@ -221,6 +221,18 @@ module.exports.editPost = (idcurso, idpost, post) => {
 }
 
 
+module.exports.getOnePost = (curso, post) => {
+    return Curso.findOne(
+        { _id: curso, 'posts._id': post },
+        { 'posts.$': 1 }
+    )
+    .then(curso => {
+        return curso.posts[0];
+    }).catch(err => {
+        return err;
+    });
+}
+
 /*
 module.exports.getOne = (id) => {
     return Meta.findOne({ _id: id })
