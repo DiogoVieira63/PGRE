@@ -28,6 +28,15 @@ function checkLoggin(req, res, next) {
       req.user = dados.data.user;
       req.cursos = dados.data.cursos;
       req.noticias = dados.data.noticias;
+      let notificacoes = req.noticias.notificacao;
+      let notificacoesNaoLidas = 0;
+      for (let i = 0; i < notificacoes.length; i++) {
+        if (notificacoes[i].lida == false){
+          notificacoesNaoLidas++;
+        }
+      }
+      req.notificacoesNaoLidas = notificacoesNaoLidas;
+
       console.log("Noticias",req.noticias);
 
       next();
@@ -48,16 +57,9 @@ router.get('/',checkLoggin, function(req, res, next) {
     .then(dados => {
       //console.log("Cursos",dados.data);
       data =  new Date().toISOString().substring(0, 16)
-      let notificacoes = req.noticias.notificacao;
-      let notificacoesNaoLidas = 0;
-      for (let i = 0; i < notificacoes.length; i++) {
-        if (notificacoes[i].lida == false){
-          notificacoesNaoLidas++;
-        }
-      }
-      console.log("Notificações",notificacoesNaoLidas);
+
     
-      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos", notificacoes: notificacoesNaoLidas});
+      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos", nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
     })
     .catch(err => res.render('error', {error: err}));
   // Dados.getAllFiles(req.cookies['token'])
@@ -71,7 +73,7 @@ router.get('/',checkLoggin, function(req, res, next) {
 });
 
 router.get('/cursos/form',checkLoggin, function(req, res, next) {
-  res.render('cursoForm');
+  res.render('cursoForm',{nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
 });
 
 router.get('/cursos/:curso/files/upload',checkLoggin, function(req, res, next) {
@@ -79,7 +81,7 @@ router.get('/cursos/:curso/files/upload',checkLoggin, function(req, res, next) {
   Dados.getTypesActives(req.cookies['token'])
     .then(dados => {
       console.log("Tipos",dados.data);
-      res.render('fileForm',{curso: req.params.curso, types: dados.data});
+      res.render('fileForm',{curso: req.params.curso, types: dados.data, nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
     }).catch(err => 
       res.render('error', {error: err
       }));
@@ -90,7 +92,7 @@ router.get('/cursos/:id/posts/:idpost',checkLoggin, function(req, res, next) {
   Dados.getOnePost(req.params.id,req.params.idpost,req.cookies['token'])
     .then(dados => {
       Dados.getOne(dados.data.id_meta,req.cookies['token']).then(file => {
-        res.render('post',{post: dados.data, meta: file.data.meta});
+        res.render('post',{post: dados.data, meta: file.data.meta,nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
       }
       ).catch(err => {
         res.status(500).jsonp({error: err});
@@ -101,7 +103,7 @@ router.get('/cursos/:id/posts/:idpost',checkLoggin, function(req, res, next) {
 
 router.get('/cursos/:id/addpost',checkLoggin, function(req, res, next) {
   // console.log(req.cookies['token'])
-  res.render('postForm',{curso: req.params.id});
+  res.render('postForm',{curso: req.params.id,nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
 });
 
 router.post('/posts',checkLoggin,function(req, res, next) {
@@ -188,7 +190,6 @@ function getArrayLevel(user,curso){
   }
 }
 
-
 router.get('/cursos',checkLoggin, function(req, res, next) {
   console.log(req.cookies['token'])
   Dados.getAllCursos(req.cookies['token'])
@@ -204,7 +205,7 @@ router.get('/cursos',checkLoggin, function(req, res, next) {
         }
       }
       date =  new Date().toISOString().substring(0, 16)
-      res.render('listacursos', { cursos: dados.data, data: date, titulo: "Lista de Cursos"});
+      res.render('listacursos', { cursos: dados.data, data: date, titulo: "Lista de Cursos",nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
     })
     .catch(err => res.render('error', {error: err}));
   // Dados.getAllCursos(req.cookies['token'])
@@ -221,7 +222,7 @@ router.get('/meuscursos',checkLoggin, function(req, res, next) {
     .then(dados => {
       //console.log("Cursos",dados.data);
       data =  new Date().toISOString().substring(0, 16)
-      res.render('listacursos', { cursos: dados.data, data: data, titulo: "Meus Cursos"});
+      res.render('listacursos', { cursos: dados.data, data: data, titulo: "Meus Cursos",nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
     })
     .catch(err => res.render('error', {error: err}));
 });
@@ -235,7 +236,7 @@ router.get('/cursos/:id/edit',checkLoggin, function(req, res, next) {
       console.log(dados.data)
       Auth.getNames(dados.data.curso.professores,req.cookies['token']).then(nomes => {
         let vis = ["privado","publico","convite"];
-        res.render('editcurso', { curso: dados.data.curso, options: {visibility: vis}, profs:nomes.data})
+        res.render('editcurso', { curso: dados.data.curso, options: {visibility: vis}, profs:nomes.data,nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao})
       })
       .catch(err => res.render('error', {error: err}));
     })
@@ -251,7 +252,7 @@ router.get('/cursos/:id/alunos',checkLoggin, function(req, res, next) {
       
       Auth.getNames(dados.data.curso.alunos,req.cookies['token']).then(nomes => {
         data =  new Date().toISOString().substring(0, 16)
-        res.render('alunos', {curso: dados.data.nome, alunos:nomes.data, data:data})
+        res.render('alunos', {curso: dados.data.nome, alunos:nomes.data, data:data,nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao})
       })
       .catch(err => res.render('error', {error: err}));
       // console.log(dados.data)
@@ -294,7 +295,9 @@ router.get('/cursos/:id',checkLoggin, function(req, res, next) {
             if (dados.data.curso.regente == req.user.username){
               edit = true
             }
-            res.render('curso', { curso: dados.data.curso, profs:nomes.data,metas: metas.data.metas, permission:dados.data.permission, edit:edit, level:req.user.level, average:average})
+            res.render('curso', { curso: dados.data.curso, profs:nomes.data,metas: metas.data.metas, 
+              permission:dados.data.permission, edit:edit, level:req.user.level, average:average,
+              nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao})
           })
           .catch(err => res.render('error', {error: err}));
           // console.log(dados.data)
@@ -336,7 +339,7 @@ router.get('/user/:id',checkLoggin, function(req, res, next) {
   let cookie = req.cookies['token'];
   axios.get('http://localhost:3001/auth/' + req.params.id + "?token=" + cookie).then(dados => {
 
-    res.jsonp(dados.data);
+    res.jsonp(dados.data, {nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
   }
   ).catch(err => {
     res.status(500).jsonp({error: err});
@@ -431,7 +434,8 @@ router.get('/profile',checkLoggin, function(req, res, next) {
     Dados.getProfile(cookie).then(dados => {
       console.log(dados.data);
       console.log("USER: "+dados.data.user)
-      res.render('profile', {user: dados.data.user, cursos: dados.data.cursos, profile:true});
+      res.render('profile', {user: dados.data.user, cursos: dados.data.cursos, profile:true,
+        nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
     }
     ).catch(err => {
       res.render('error', {error: err});
@@ -444,7 +448,8 @@ router.get('/profile/edit',checkLoggin, function(req, res, next) {
     // console.log(dados.data);
     let universidades = ["Universidade do Porto","Universidade de Lisboa","Universidade do Minho"];
     let departamentos = ["Departamento de Informática","Departamento de Física","Departamento de Matemática"];
-    res.render('editProfile', {user: dados.data.user, cursos: dados.data.cursos, options: {university: universidades, department: departamentos}});
+    res.render('editProfile', {user: dados.data.user, cursos: dados.data.cursos, options: {university: universidades, department: departamentos},
+                              nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
   }
   ).catch(err => {
     res.render('error', {error: err});
@@ -499,7 +504,7 @@ router.get('/users/:id',checkLoggin, function(req, res, next) {
   
   Auth.getUser(req.params.id, cookie).then(dados => {
     console.log("DADOS: ",dados.data);
-    res.render('profile', {user: dados.data, cursos: [], profile:false});
+    res.render('profile', {user: dados.data, cursos: [], profile:false, nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
   }
   ).catch(err => {
     res.render('error', {error: err});
