@@ -57,7 +57,7 @@ router.get('/',checkLoggin, function(req, res, next) {
       }
       console.log("Notificações",notificacoesNaoLidas);
     
-      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos", notificacoes: notificacoesNaoLidas});
+      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos", nao_lidas: notificacoesNaoLidas, notificacoes:notificacoes});
     })
     .catch(err => res.render('error', {error: err}));
   // Dados.getAllFiles(req.cookies['token'])
@@ -431,7 +431,7 @@ router.get('/profile',checkLoggin, function(req, res, next) {
     Dados.getProfile(cookie).then(dados => {
       console.log(dados.data);
       console.log("USER: "+dados.data.user)
-      res.render('profile', {user: dados.data.user, cursos: dados.data.cursos, profile:true});
+      res.render('profile', {user: dados.data.user, cursos: dados.data.cursos, profile:req.user.username});
     }
     ).catch(err => {
       res.render('error', {error: err});
@@ -492,6 +492,10 @@ router.post('/register',function(req, res, next) {
   });
 });
 
+router.get('/notificacoes',checkLoggin, function(req, res, next) {
+  let notificacoes = req.noticias.notificacao;
+  res.render('notificacoes', {notificacoes:notificacoes});
+});
 
 //FALTA IR BUSCAR CURSOS
 router.get('/users/:id',checkLoggin, function(req, res, next) {
@@ -499,7 +503,7 @@ router.get('/users/:id',checkLoggin, function(req, res, next) {
   
   Auth.getUser(req.params.id, cookie).then(dados => {
     console.log("DADOS: ",dados.data);
-    res.render('profile', {user: dados.data, cursos: [], profile:false});
+    res.render('profile', {user: dados.data, cursos: [], profile:req.user.username});
   }
   ).catch(err => {
     res.render('error', {error: err});

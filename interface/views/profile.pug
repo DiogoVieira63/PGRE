@@ -73,6 +73,6 @@ block content
       +createRow("Data de Registo", user.registerDate.substring(0,10))
       - if(cursos.length > 0)
         +createRowArray("Cursos", cursos)
-    - if (profile)
+    - if (profile == user.username)
       button.w3-btn.w3-round.w3-margin(class=`w3-amber`)
         a(href="/profile/edit/") Edit
