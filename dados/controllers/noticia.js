@@ -33,3 +33,14 @@ module.exports.insertNotificacao = (id, notificacao) => {
             return err;
         })
 }
+
+module.exports.lida = (id, notificacao) => {
+    return Noticia.findOneAndUpdate({ username: id, "notificacao._id": notificacao }, { $set: { "notificacao.$.lida": true } })
+        .then(noticia => {
+            return noticia;
+        }).catch(err => {
+            return err;
+        });
+}
+
+

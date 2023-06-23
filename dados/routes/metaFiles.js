@@ -43,6 +43,25 @@ router.post("/", verifyJWT, function (req, res, nxt) {
   
   Meta.insert(meta)
     .then((meta) => {
+      let notificacao = {
+        "descricao": "Foi adicionado um novo ficheiro",
+        "lida": false,
+        "link": "/files/" + meta.id,
+      } 
+      Curso.getOne(body.course).then((curso) => {
+        console.log("Curso",curso.alunos);
+        for (var i = 0; i < curso.alunos.length; i++) {
+          Noticia.insertNotificacao(curso.alunos[i], notificacao).then((notificacao) => {
+              console.log("Notificacao adicionada com sucesso");
+          }).catch((err) => {
+              console.log(err);
+              res.status(500).jsonp({error: err});
+          })
+        }
+      })
+
+
+
       if (body.post == "true") {
         var post = {
           title: body.post_titulo,
@@ -51,25 +70,27 @@ router.post("/", verifyJWT, function (req, res, nxt) {
           publishedBy: req.user.username,
           id_meta: meta._id,
         };
-        let notificacao = {
-          "descricao": "Foi adicionado um novo ficheiro",
-          "lida": false,
-          "link": "/files/" + meta.id,
-        } 
-        Curso.getOne(body.course).then((curso) => {
-          console.log("Curso",curso.alunos);
-          for (var i = 0; i < curso.alunos.length; i++) {
-            Noticia.insertNotificacao(curso.alunos[i], notificacao).then((notificacao) => {
-                console.log("Notificacao adicionada com sucesso");
-            }).catch((err) => {
-                console.log(err);
-                res.status(500).jsonp({error: err});
-            })
-          }
-        })
+
 
         Curso.addPost(meta.course, post)
           .then((curso) => {
+            Curso.getOne(meta.course).then((curso) => {
+              post = curso.posts[curso.posts.length-1];
+              let notificacao = {
+                  "descricao": `${post.title}: ${post.description}`,
+                  "lida": false,
+                  "link": `/cursos/${meta.course}/posts/${post._id}`,
+              }
+              for (var i = 0; i < curso.alunos.length; i++) {
+      
+                Noticia.insertNotificacao(curso.alunos[i], notificacao).then((notificacao) => {
+                    console.log("Notificacao adicionada com sucesso");
+                }).catch((err) => {
+                    console.log(err);
+                    res.status(500).jsonp({error: err});
+                })
+              }
+            })
             res.status(201).send();
           })
           .catch((err) => {

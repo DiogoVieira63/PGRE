@@ -59,6 +59,18 @@ router.post("/",function (req, res, nxt) {
     });
 });
 
+router.post("/lida",/*verifyJWT,*/function (req, res, nxt) {
+    Noticia.lida(req.body.username,req.body.id)
+        .then((noticia) => {
+            console.log("Noticia lida");
+            res.status(201).send();
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).jsonp({error: err});
+        });
+});
+
 
 router.get("/",verifyJWT, function (req, res, nxt) {
     var username = req.user.username;
@@ -73,16 +85,7 @@ router.get("/",verifyJWT, function (req, res, nxt) {
 
 function notificacaoCurso (curso,notificacao){
     console.log("Notificacao curso");
-    Curso.getOne(curso).then((curso) => {
-        for (var i = 0; i < curso.alunos.length; i++) {
-          Noticia.insertNotificacao(curso.alunos[i], notificacao).then((notificacao) => {
-              console.log("Notificacao adicionada com sucesso");
-          }).catch((err) => {
-              console.log(err);
-              res.status(500).jsonp({error: err});
-          })
-        }
-      })
+
 }
 
 

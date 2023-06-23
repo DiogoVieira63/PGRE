@@ -28,6 +28,7 @@ function checkLoggin(req, res, next) {
       req.user = dados.data.user;
       req.cursos = dados.data.cursos;
       req.noticias = dados.data.noticias;
+      req.noticias.porta = process.env.DADOS_PORT;
       let notificacoes = req.noticias.notificacao;
       let notificacoesNaoLidas = 0;
       for (let i = 0; i < notificacoes.length; i++) {
@@ -59,7 +60,7 @@ router.get('/',checkLoggin, function(req, res, next) {
       data =  new Date().toISOString().substring(0, 16)
 
     
-      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos", nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos", nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
     })
     .catch(err => res.render('error', {error: err}));
   // Dados.getAllFiles(req.cookies['token'])
@@ -73,7 +74,7 @@ router.get('/',checkLoggin, function(req, res, next) {
 });
 
 router.get('/cursos/form',checkLoggin, function(req, res, next) {
-  res.render('cursoForm',{nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+  res.render('cursoForm',{nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
 });
 
 router.get('/cursos/:curso/files/upload',checkLoggin, function(req, res, next) {
@@ -81,7 +82,7 @@ router.get('/cursos/:curso/files/upload',checkLoggin, function(req, res, next) {
   Dados.getTypesActives(req.cookies['token'])
     .then(dados => {
       console.log("Tipos",dados.data);
-      res.render('fileForm',{curso: req.params.curso, types: dados.data, nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+      res.render('fileForm',{curso: req.params.curso, types: dados.data, nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
     }).catch(err => 
       res.render('error', {error: err
       }));
@@ -92,7 +93,7 @@ router.get('/cursos/:id/posts/:idpost',checkLoggin, function(req, res, next) {
   Dados.getOnePost(req.params.id,req.params.idpost,req.cookies['token'])
     .then(dados => {
       Dados.getOne(dados.data.id_meta,req.cookies['token']).then(file => {
-        res.render('post',{post: dados.data, meta: file.data.meta,nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+        res.render('post',{post: dados.data, meta: file.data.meta,nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
       }
       ).catch(err => {
         res.status(500).jsonp({error: err});
@@ -103,7 +104,7 @@ router.get('/cursos/:id/posts/:idpost',checkLoggin, function(req, res, next) {
 
 router.get('/cursos/:id/addpost',checkLoggin, function(req, res, next) {
   // console.log(req.cookies['token'])
-  res.render('postForm',{curso: req.params.id,nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+  res.render('postForm',{curso: req.params.id,nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
 });
 
 router.post('/posts',checkLoggin,function(req, res, next) {
@@ -205,7 +206,7 @@ router.get('/cursos',checkLoggin, function(req, res, next) {
         }
       }
       date =  new Date().toISOString().substring(0, 16)
-      res.render('listacursos', { cursos: dados.data, data: date, titulo: "Lista de Cursos",nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+      res.render('listacursos', { cursos: dados.data, data: date, titulo: "Lista de Cursos",nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
     })
     .catch(err => res.render('error', {error: err}));
   // Dados.getAllCursos(req.cookies['token'])
@@ -222,7 +223,7 @@ router.get('/meuscursos',checkLoggin, function(req, res, next) {
     .then(dados => {
       //console.log("Cursos",dados.data);
       data =  new Date().toISOString().substring(0, 16)
-      res.render('listacursos', { cursos: dados.data, data: data, titulo: "Meus Cursos",nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+      res.render('listacursos', { cursos: dados.data, data: data, titulo: "Meus Cursos",nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
     })
     .catch(err => res.render('error', {error: err}));
 });
@@ -236,7 +237,7 @@ router.get('/cursos/:id/edit',checkLoggin, function(req, res, next) {
       console.log(dados.data)
       Auth.getNames(dados.data.curso.professores,req.cookies['token']).then(nomes => {
         let vis = ["privado","publico","convite"];
-        res.render('editcurso', { curso: dados.data.curso, options: {visibility: vis}, profs:nomes.data,nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao})
+        res.render('editcurso', { curso: dados.data.curso, options: {visibility: vis}, profs:nomes.data,nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias})
       })
       .catch(err => res.render('error', {error: err}));
     })
@@ -252,7 +253,7 @@ router.get('/cursos/:id/alunos',checkLoggin, function(req, res, next) {
       
       Auth.getNames(dados.data.curso.alunos,req.cookies['token']).then(nomes => {
         data =  new Date().toISOString().substring(0, 16)
-        res.render('alunos', {curso: dados.data.nome, alunos:nomes.data, data:data,nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao})
+        res.render('alunos', {curso: dados.data.nome, alunos:nomes.data, data:data,nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias})
       })
       .catch(err => res.render('error', {error: err}));
       // console.log(dados.data)
@@ -297,7 +298,7 @@ router.get('/cursos/:id',checkLoggin, function(req, res, next) {
             }
             res.render('curso', { curso: dados.data.curso, profs:nomes.data,metas: metas.data.metas, 
               permission:dados.data.permission, edit:edit, level:req.user.level, average:average,
-              nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao})
+              nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias})
           })
           .catch(err => res.render('error', {error: err}));
           // console.log(dados.data)
@@ -339,7 +340,7 @@ router.get('/user/:id',checkLoggin, function(req, res, next) {
   let cookie = req.cookies['token'];
   axios.get('http://localhost:3001/auth/' + req.params.id + "?token=" + cookie).then(dados => {
 
-    res.jsonp(dados.data, {nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+    res.jsonp(dados.data, {nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
   }
   ).catch(err => {
     res.status(500).jsonp({error: err});
@@ -435,7 +436,7 @@ router.get('/profile',checkLoggin, function(req, res, next) {
       console.log(dados.data);
       console.log("USER: "+dados.data.user)
       res.render('profile', {user: dados.data.user, cursos: dados.data.cursos, profile:req.user.username,
-        nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+        nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
     }
     ).catch(err => {
       res.render('error', {error: err});
@@ -449,7 +450,7 @@ router.get('/profile/edit',checkLoggin, function(req, res, next) {
     let universidades = ["Universidade do Porto","Universidade de Lisboa","Universidade do Minho"];
     let departamentos = ["Departamento de Informática","Departamento de Física","Departamento de Matemática"];
     res.render('editProfile', {user: dados.data.user, cursos: dados.data.cursos, options: {university: universidades, department: departamentos},
-                              nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+                              nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
   }
   ).catch(err => {
     res.render('error', {error: err});
@@ -498,8 +499,7 @@ router.post('/register',function(req, res, next) {
 });
 
 router.get('/notificacoes',checkLoggin, function(req, res, next) {
-  let notificacoes = req.noticias.notificacao;
-  res.render('notificacoes', {notificacoes:notificacoes});
+  res.render('notificacoes', {noticia: req.noticias});
 });
 
 //FALTA IR BUSCAR CURSOS
@@ -508,7 +508,7 @@ router.get('/users/:id',checkLoggin, function(req, res, next) {
   
   Auth.getUser(req.params.id, cookie).then(dados => {
     console.log("DADOS: ",dados.data);
-    res.render('profile', {user: dados.data, cursos: [], profile:req.user.username, nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+    res.render('profile', {user: dados.data, cursos: [], profile:req.user.username, nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
   }
   ).catch(err => {
     res.render('error', {error: err});

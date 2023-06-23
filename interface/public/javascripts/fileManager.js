@@ -13,6 +13,38 @@ function showFile(name, type){
 }
 
 
+
+function markAsRead(username,id,porta){
+
+  console.log("ID: ",id)
+
+  //require('dotenv').config({path: '../../.env'})
+  console.log(porta)
+  var token = document.cookie.split("=")
+  var tok = ""
+  for(let i = 0; i<token.length; i+=2){
+    if(token[i]=="token"){
+      tok = token[i+1]
+    }
+  }
+  console.log(tok)
+  console.log("Inside markAsRead");
+  var x = document.getElementById(id);
+  
+  if (id[0] == "_"){
+    id = id.slice(1,id.lenght)
+  }
+  
+  x.classList.remove('w3-border-red');
+  x.classList.add('w3-border-green');
+  let url = `http://localhost:${porta}`;
+  console.log(`${url}/noticias/${id}`);
+
+  return axios.post(`${url}/noticias/lida`, {username: username, id: id});
+}
+
+  
+
 function toggleAccordion(id){
     console.log(id)
     var x = document.getElementById('accordion' + id);

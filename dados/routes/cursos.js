@@ -114,7 +114,7 @@ router.post("/:curso/addpost",verifyJWT/*,verifyProfessor*/,function (req, res, 
             let notificacao = {
                 "descricao": `${post.title}: ${post.description}`,
                 "lida": false,
-                "link": `/curso/${cursoId}/posts/${post._id}`,
+                "link": `/cursos/${cursoId}/posts/${post._id}`,
             }
             for (var i = 0; i < curso.alunos.length; i++) {
     

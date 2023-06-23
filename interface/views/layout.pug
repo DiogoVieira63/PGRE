@@ -9,6 +9,8 @@ html
     link(rel='stylesheet', href='/stylesheets/jquery.modal.min.css')
     script(src='/javascripts/fileManager.js')
     link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+
   body.w3-light-grey
     if !no_bar
       .w3-bar.w3-border.w3-light-grey.w3-xlarge
@@ -32,21 +34,17 @@ html
               i.fa.fa-bell
               .w3.text.w3-medium Notificações
             div#notificacoes.w3-dropdown-content.w3-bar-block.w3-border(style="width:500px; position: absolute; right: 16px; font-size: 15px;")
-              each not in notificacoes 
+              - console.log(noticia)
+              each not in noticia.notificacao 
                 if not.lida == false
-                 .w3-container
-                    .w3-panel.w3-light-red.w3-bottombar.w3-border-red.w3-border.w3-display-container 
+                 .w3-container(onmouseenter=`markAsRead('${noticia.username}','${not._id}','${noticia.porta}')`)
+                    .w3-panel.w3-bottombar.w3-border-red.w3-border.w3-display-container(id=`${not._id}`)
                         p   
                             b Descrição: 
                             | #{not.descricao}
-                        p 
-                            b Lida: 
-                            i.w3-red.w3-xlarge.fa.fa-times
                         if not.link
                           p.w3-center
                               a.w3-button.w3-grey.w3-round(href=not.link) Mostrar
-                        p.w3-center
-                            a.w3-button.w3-grey.w3-round(href=`/}`) Esconder
               p.w3-center
                 a.w3-button.w3-grey.w3-round(href=`/notificacoes`) Mostrar todas           
 
