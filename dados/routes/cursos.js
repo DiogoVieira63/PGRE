@@ -101,16 +101,34 @@ router.get("/:curso/posts/:post"/*,verifyJWT,verifyCourse*/,function (req, res, 
 
 
 // verificar se é prof?
-router.post("/:curso/addpost"/*,verifyJWT,verifyProfessor,verifyCourse*/,function (req, res, nxt) {
-    var curso = req.params.curso;
+router.post("/:curso/addpost",verifyJWT/*,verifyProfessor*/,function (req, res, nxt) {
+    var cursoId = req.params.curso;
     var post = req.body;
     // var username = req.user.username;
     console.log("BODY:",req.body)
-    Curso.addPost(curso,post)
+    Curso.addPost(cursoId,post)
     .then((curso) => {
+        
+        Curso.getOne(cursoId).then((curso) => {
+            post = curso.posts[curso.posts.length-1];
+            let notificacao = {
+                "descricao": `${post.title}: ${post.description}`,
+                "lida": false,
+                "link": `/curso/${cursoId}/posts/${post._id}`,
+            }
+            for (var i = 0; i < curso.alunos.length; i++) {
+    
+              Noticia.insertNotificacao(curso.alunos[i], notificacao).then((notificacao) => {
+                  console.log("Notificacao adicionada com sucesso");
+              }).catch((err) => {
+                  console.log(err);
+                  res.status(500).jsonp({error: err});
+              })
+            }
+          })
         res.status(201).jsonp(curso);
     }).catch((err) => {
-        nxt(err);
+        res.status(500).jsonp({error: err});
     });
   });
   
@@ -128,6 +146,7 @@ router.post("/create",verifyJWT,/*verifyProfessor,*/function (req, res, nxt) {
     var curso = req.body.curso;
     Curso.insert(curso,req.user.username)
     .then((curso) => {
+        
         res.status(201).jsonp(curso);
     }).catch((err) => {
         res.status(500).jsonp({error: err});

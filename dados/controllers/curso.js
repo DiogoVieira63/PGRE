@@ -105,7 +105,7 @@ module.exports.removeProfessor = (idcurso, profId) => {
 }
 
 module.exports.addPost = (idcurso, post) => {
-    return Curso.updateOne(
+    return Curso.findOneAndUpdate(
         {_id: idcurso}, 
         {$push: {posts: post}}
     ).then(curso => {
@@ -159,8 +159,8 @@ module.exports.removeCommentPost = (idcurso, idpost, idcomment) => {
 
 module.exports.isProfessor = (idCurso, idProfessor) =>{
     return Curso.findOne( {_id : idCurso, professores: idProfessor}).then(
-        _ => {
-        return true;
+        lista => {
+            return lista != null;
     }).catch(err => {
         return err;
     });

@@ -14,12 +14,13 @@ const verifyProfessor = Permission.professor;
 const verifyJWT = Permission.token;
 const verifyCourse = Permission.course;
 
+
+
 // upload file meta
 router.post("/", verifyJWT, function (req, res, nxt) {
   var file = req.body.file;
   console.log(file);
   var body = req.body.body;
-  console.log(body);
   var meta = {
     id: file.filename,
     name: file.originalname,
@@ -37,23 +38,8 @@ router.post("/", verifyJWT, function (req, res, nxt) {
     mimetype: file.mimetype,
     size: file.size,
   };
-  Curso.getOne(body.course).then((curso) => {
-    console.log("curso", curso);
 
-    for (var i = 0; i < curso.alunos.length; i++) {
-      let notificacao = {
-        "descricao": "Foi adicionado um novo ficheiro",
-        "lida": false,
-        "link": "/files/" + meta.id,
-      }
-      Noticia.insertNotificacao(curso.alunos[i].username, notificacao).then((notificacao) => {
-          console.log("Notificacao adicionada com sucesso");
-      }).catch((err) => {
-          console.log(err);
-          res.status(500).jsonp({error: err});
-      })
-  }
-  })
+
   
   Meta.insert(meta)
     .then((meta) => {
@@ -65,6 +51,23 @@ router.post("/", verifyJWT, function (req, res, nxt) {
           publishedBy: req.user.username,
           id_meta: meta._id,
         };
+        let notificacao = {
+          "descricao": "Foi adicionado um novo ficheiro",
+          "lida": false,
+          "link": "/files/" + meta.id,
+        } 
+        Curso.getOne(body.course).then((curso) => {
+          console.log("Curso",curso.alunos);
+          for (var i = 0; i < curso.alunos.length; i++) {
+            Noticia.insertNotificacao(curso.alunos[i], notificacao).then((notificacao) => {
+                console.log("Notificacao adicionada com sucesso");
+            }).catch((err) => {
+                console.log(err);
+                res.status(500).jsonp({error: err});
+            })
+          }
+        })
+
         Curso.addPost(meta.course, post)
           .then((curso) => {
             res.status(201).send();

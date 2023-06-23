@@ -45,7 +45,7 @@ function professor(req, res, next) {
   if( req.user.level == "professor"){
       var course = req.params.course;
       if (course){
-        var id = req.user.id;
+        var id = req.user.username;
         Curso
           .isProfessor(id, course)
           .then((isProfessor) => {
@@ -56,6 +56,7 @@ function professor(req, res, next) {
             }
           })
           .catch((err) => {
+            console.log("ERRO PERMISSAO: "+err)
             res.status(500).send();
           });
       }else{

@@ -4,6 +4,8 @@ var fs = require("fs");
 
 
 const Noticia = require("../controllers/noticia");
+const Curso = require("../controllers/curso");
+
 
 const ObjectId = require("mongoose").Types.ObjectId;
 var jwt = require('jsonwebtoken');
@@ -69,6 +71,19 @@ router.get("/",verifyJWT, function (req, res, nxt) {
 
 
 
+function notificacaoCurso (curso,notificacao){
+    console.log("Notificacao curso");
+    Curso.getOne(curso).then((curso) => {
+        for (var i = 0; i < curso.alunos.length; i++) {
+          Noticia.insertNotificacao(curso.alunos[i], notificacao).then((notificacao) => {
+              console.log("Notificacao adicionada com sucesso");
+          }).catch((err) => {
+              console.log(err);
+              res.status(500).jsonp({error: err});
+          })
+        }
+      })
+}
 
 
 
