@@ -28,11 +28,26 @@ html
             if nao_lidas > 0
               i.fa.fa-bell.w3-text-red
               .w3.text.w3-medium.w3-text-red Notificações
-              div#notificacoes.w3-dropdown-content.w3-bar-block.w3-border(style="display:none")
-                  a.w3-bar-item.w3-button(href="#") Link 1
-                  a.w3-bar-item.w3-button(href="#") Link 2
-                  a.w3-bar-item.w3-button(href="#") Link 3
-            else
+            else 
               i.fa.fa-bell
               .w3.text.w3-medium Notificações
+            div#notificacoes.w3-dropdown-content.w3-bar-block.w3-border(style="width:500px; position: absolute; right: 16px; font-size: 15px;")
+              each not in notificacoes 
+                if not.lida == false
+                 .w3-container
+                    .w3-panel.w3-light-red.w3-bottombar.w3-border-red.w3-border.w3-display-container 
+                        p   
+                            b Descrição: 
+                            | #{not.descricao}
+                        p 
+                            b Lida: 
+                            i.w3-red.w3-xlarge.fa.fa-times
+                        if not.link
+                          p.w3-center
+                              a.w3-button.w3-grey.w3-round(href=not.link) Mostrar
+                        p.w3-center
+                            a.w3-button.w3-grey.w3-round(href=`/}`) Esconder
+              p.w3-center
+                a.w3-button.w3-grey.w3-round(href=`/notificacoes`) Mostrar todas           
+
     block content

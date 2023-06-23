@@ -434,7 +434,7 @@ router.get('/profile',checkLoggin, function(req, res, next) {
     Dados.getProfile(cookie).then(dados => {
       console.log(dados.data);
       console.log("USER: "+dados.data.user)
-      res.render('profile', {user: dados.data.user, cursos: dados.data.cursos, profile:true,
+      res.render('profile', {user: dados.data.user, cursos: dados.data.cursos, profile:req.user.username,
         nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
     }
     ).catch(err => {
@@ -497,6 +497,10 @@ router.post('/register',function(req, res, next) {
   });
 });
 
+router.get('/notificacoes',checkLoggin, function(req, res, next) {
+  let notificacoes = req.noticias.notificacao;
+  res.render('notificacoes', {notificacoes:notificacoes});
+});
 
 //FALTA IR BUSCAR CURSOS
 router.get('/users/:id',checkLoggin, function(req, res, next) {
@@ -504,7 +508,7 @@ router.get('/users/:id',checkLoggin, function(req, res, next) {
   
   Auth.getUser(req.params.id, cookie).then(dados => {
     console.log("DADOS: ",dados.data);
-    res.render('profile', {user: dados.data, cursos: [], profile:false, nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
+    res.render('profile', {user: dados.data, cursos: [], profile:req.user.username, nao_lidas: req.notificacoesNaoLidas, notificacoes: req.noticias.notificacao});
   }
   ).catch(err => {
     res.render('error', {error: err});
