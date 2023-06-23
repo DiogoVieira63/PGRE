@@ -22,3 +22,14 @@ module.exports.get = (id) => {
             return err;
         })
 }
+
+
+module.exports.insertNotificacao = (id, notificacao) => {
+    return Noticia.findOneAndUpdate({ username: id }, { $push: { notificacao: notificacao } })
+        .then(noticia => {
+            return noticia;
+        })
+        .catch(err => {
+            return err;
+        })
+}

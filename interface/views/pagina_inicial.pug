@@ -4,7 +4,10 @@ block content
     .w3-container.w3-content
     .w3-card-4
         header.w3-indigo
-            h2= titulo
+            h2.w3-margin-left(style="display: inline")=titulo
+                    span
+                        a.w3-circle.w3-button(href=`/cursos/form`)
+                            i.fa.fa-plus
         .w3-container
             table.w3-table.w3-bordered
                 tr
