@@ -1,15 +1,17 @@
 
-function showFile(name, type){
+function showFile(name, type,id){
     console.log("Inside showFile");
     if (type == "image/png" || type == "image/jpeg")
         var file = $(`<img src='/fileStore/${name}' width='400px'>`);
     else 
         var file = $(`<p>${name},${type}</p>`);
     var download = $(`<div><a href='/download/${name}' download='${name}'>Download</a></div>`)
+    var open = $(`<div><a href='/files/${id}'>Open Page</a></div>`)
    
     $("#display").empty();
-    $("#display").append(file,download);
+    $("#display").append(file,download,open);
     $("#display").modal({ showClose: true, keyboard : true });
+
 }
 
 

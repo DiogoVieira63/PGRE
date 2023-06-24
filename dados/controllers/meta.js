@@ -41,6 +41,7 @@ module.exports.getOneId = (id) => {
         return meta;
     })
     .catch(err => {
+        console.log(err);
         return err;
     })
 }

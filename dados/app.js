@@ -19,11 +19,6 @@ db.on("error", function () {
   console.log("MongoDB connection error:");
   process.exit(1);
 });
-var gfs;
-db.on("open", function () {
-  gfs = new mongoose.mongo.GridFSBucket(db.db);
-  console.log("MongoDB connection ok!");
-});
 
 
 
@@ -41,8 +36,6 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 
 app.use(function(req, res, next) {
-  console.log(req.cookies)
-  console.log(req.headers)
   res.header("Access-Control-Allow-Origin", "*");
   res.header('Access-Control-Allow-Methods', 'GET, POST');
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -56,10 +49,7 @@ app.use(function(req, res, next) {
 
 
 
-app.use(function (req, res, next) {
-  req.gfs = gfs;
-  next();
-});
+
 
 var metaFilesRouter = require("./routes/metaFiles");
 var metaTypesRouter = require("./routes/metaTypes.js");

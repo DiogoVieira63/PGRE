@@ -46,7 +46,7 @@ router.post("/", verifyJWT, function (req, res, nxt) {
       let notificacao = {
         "descricao": "Foi adicionado um novo ficheiro",
         "lida": false,
-        "link": "/files/" + meta.id,
+        "link": "/files/" + meta._id,
       } 
       Curso.getOne(body.course).then((curso) => {
         console.log("Curso",curso.alunos);
@@ -173,11 +173,12 @@ router.get("/", verifyJWT, function (req, res) {
 });
 
 // get one file
-router.get("/:id", function (req, res, nxt) {
+router.get("/:id", verifyJWT,function (req, res, nxt) {
   console.log("id: " + req.params.id);
 
   Meta.getOne(req.params.id)
     .then((meta) => {
+      console.log("meta: " + meta);
       res.jsonp({ meta: meta });
     })
     .catch((err) => {
@@ -187,7 +188,7 @@ router.get("/:id", function (req, res, nxt) {
     });
 });
 
-router.get("/download/:id", function (req, res, nxt) {
+router.get("/download/:id",verifyJWT,function (req, res, nxt) {
   Meta.getOneId(req.params.id)
     .then((meta) => {
       res.jsonp({ meta: meta });
