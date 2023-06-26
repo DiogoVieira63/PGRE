@@ -92,7 +92,13 @@ block content
       table.w3-table-all.w3-centered
         +createRow("Título", post.title)
         +createRow("Descrição", post.description)
-        +createRow("Publicado por", post.publishedBy)
+        - let publishedByProf = profs.find(prof => prof.username === post.publishedBy)
+        tr 
+          td
+            b Publicado por
+          td 
+            a(href=`/users/${publishedByProf.id}`) #{publishedByProf.name} (#{publishedByProf.username})
+        //- +createRow("Publicado por", post.publishedBy)
         - if (post.id_meta)
           - if (meta.subtitle)
             +createRowObjectRecurso("Recurso partilhado",{"Título": meta.title, "Subtítulo": meta.subtitle, "Descrição": meta.description})

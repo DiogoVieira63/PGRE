@@ -19,8 +19,8 @@ module.exports.update = (user_fields,token) => {
 }
 
 module.exports.getNames = (username_array, token) => {
-    console.log(token)
-    console.log(username_array)
+    console.log("TOK: ",token)
+    console.log("NOMES: ",username_array)
     let url = `http://localhost:${process.env.AUTH_PORT}`;
     return axios.get(`${url}/getNames`, {params:{username_array}, headers: {Cookie: `token=${token}`}});
 }

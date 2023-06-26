@@ -95,7 +95,13 @@ block content
         +createRowArray("Tags", file.tags)
         +createRow("Tema", file.theme)
         +createRow("Autor", file.author)
-        +createRow("Upload por", file.uploadBy)
+        - let publishedBy = profs.find(prof => prof.username === file.uploadBy)
+        tr 
+          td
+            b Upload por
+          td 
+            a(href=`/users/${publishedBy.id}`) #{publishedBy.name} (#{publishedBy.username})
+        //- +createRow("Upload por", file.uploadBy)
       // full width
       button.w3-margin.w3-button.w3-indigo.w3-round(onclick=`showFile('${file.id}','${file.mimetype}','${file._id}')`) Open
 

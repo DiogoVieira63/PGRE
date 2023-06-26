@@ -108,7 +108,15 @@ router.get('/cursos/:id/posts/:idpost',checkLoggin, function(req, res, next) {
   Dados.getOnePost(req.params.id,req.params.idpost,req.cookies['token'])
     .then(dados => {
       Dados.getOne(dados.data.id_meta,req.cookies['token']).then(file => {
-        res.render('post',{post: dados.data, meta: file.data.meta,nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
+        // res.render('post',{post: dados.data, meta: file.data.meta,nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
+
+        console.log("PUB: ",dados.data.publishedBy)
+        Auth.getNames([dados.data.publishedBy],req.cookies['token']).then(nomes => {
+          res.render('post',{post: dados.data, meta: file.data.meta,nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias, profs:nomes.data});
+        })
+        .catch(err => res.render('error', {error: err}));
+      
+ 
       }
       ).catch(err => {
         res.status(500).jsonp({error: err});
@@ -330,7 +338,15 @@ router.get('/files/:id',checkLoggin, function(req, res, next) {
   let cookie = req.cookies['token'];
   Dados.getOne(req.params.id,cookie).then(dados => {
     //save file
-    res.render('file', { nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias, file: dados.data.meta});
+    // res.render('file', { nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias, file: dados.data.meta});
+
+    // console.log("PUB: ",dados.data.meta.uploadBy)
+    Auth.getNames([dados.data.meta.uploadBy],req.cookies['token']).then(nomes => {
+      res.render('file', { nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias, file: dados.data.meta, profs:nomes.data});
+    })
+    .catch(err => res.render('error', {error: err}));
+      
+ 
   }
   ).catch(err => {
     res.status(500).jsonp({error: err});
