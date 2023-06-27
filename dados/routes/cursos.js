@@ -25,6 +25,17 @@ router.get("/",verifyJWT,function (req, res) {
     });
 });
 
+router.get("/user",verifyJWT,function (req, res) {
+    console.log("BOLACHAS: ",req.cookies)
+    console.log(req.query.username)
+    Curso.findByAluno(req.query.username).then((data) => {
+        res.json(data);
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).jsonp({error: err});
+    });
+});
+
 router.get("/meuscursos",verifyJWT,function (req, res) {
     console.log(req.user)
     if (req.user.level == "aluno"){

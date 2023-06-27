@@ -40,6 +40,13 @@ module.exports.getAllCursos = (token) => {
     return axios.get(`${url}/cursos`,{headers: { Cookie: `token=${token}` }});
 }
 
+module.exports.getAllCursosByUser = (username, token) => {
+    console.log("username: ", username)
+    console.log("token: ", token)
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/cursos/user`,{params:{username},headers: { Cookie: `token=${token}` }});
+}
+
 module.exports.getOneCurso = (id,token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.get(`${url}/cursos/${id}`,{headers: { Cookie: `token=${token}` }});
