@@ -26,8 +26,6 @@ router.get("/",verifyJWT,function (req, res) {
 });
 
 router.get("/user",verifyJWT,function (req, res) {
-    console.log("BOLACHAS: ",req.cookies)
-    console.log(req.query.username)
     Curso.findByAluno(req.query.username).then((data) => {
         res.json(data);
     }).catch((err) => {
@@ -268,12 +266,40 @@ router.post("/:curso/edit",verifyJWT,verifyCourse,verifyProfessor,function (req,
 router.get("/:curso/entrar",verifyJWT,function (req, res, nxt) {
     var curso = req.params.curso;
     var username = req.user.username;
-    Curso.addAluno(curso,username)
+
+    Curso.getOne(curso)
     .then((curso) => {
-        res.status(201).jsonp(curso);
+        if (curso.visibilidade == 'privado'){
+            console.log("PRIVADO")
+            let pedido = {
+                "tipo": 'pedido',
+                "feitoPor": username,
+                "info": `O utilzador ${username} solicitou a entrada no curso ${curso.nome}.`,
+                "respondido": false,
+                "aceite":false,
+                "curso": curso._id
+            }
+
+            Noticia.insertPedido(curso.regente, pedido).then((notificacao) => {
+                console.log("Notificacao(Pedido) adicionada com sucesso");
+            }).catch((err) => {
+                console.log(err);
+                res.status(500).jsonp({error: err});
+            })
+
+        }
+        else if (curso.visibilidade == 'publico'){
+            Curso.addAluno(curso,username)
+            .then((curso) => {
+                res.status(201).jsonp(curso);
+            }).catch((err) => {
+                nxt(err);
+            });
+        }
     }).catch((err) => {
         nxt(err);
     });
+
 });
 
 

@@ -43,4 +43,13 @@ module.exports.lida = (id, notificacao) => {
         });
 }
 
+module.exports.insertPedido = (id, pedido) => {
+    return Noticia.findOneAndUpdate({ username: id }, { $push: { pedido: pedido } })
+        .then(noticia => {
+            return noticia;
+        })
+        .catch(err => {
+            return err;
+        })
+}
 

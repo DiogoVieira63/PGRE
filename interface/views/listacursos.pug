@@ -5,8 +5,9 @@ block content
 	.w3-card-4
 		header.w3-indigo
 			h2.w3-margin-left(style="display: inline")=titulo
+			input#searchListaCursos.w3-right.w3-margin(type="text", onkeyup="searchTable('searchListaCursos','listaCursos')", placeholder="Pesquisar", title="Inserir nome ou tag")
 		.w3-container
-			table.w3-table.w3-bordered
+			table#listaCursos.w3-table.w3-bordered
 				tr
 					th Nome
 					th Descrição

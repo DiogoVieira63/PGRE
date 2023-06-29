@@ -14,6 +14,9 @@ const pedidoSchema = new mongoose.Schema({
     "tipo": String,
     "feitoPor": String,
     "info": String,
+    "respondido": Boolean,
+    "aceite":Boolean,
+    "curso": String
 })
 
 
