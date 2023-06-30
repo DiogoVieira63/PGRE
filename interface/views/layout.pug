@@ -35,6 +35,27 @@ html
               .w3.text.w3-medium Notificações
             div#notificacoes.w3-dropdown-content.w3-bar-block.w3-border(style="width:500px; position: absolute; right: 16px; font-size: 15px;")
               if noticia
+                each pedido in noticia.pedido 
+                  if pedido.respondido == false 
+                    .w3-container
+                      .w3-panel.w3-bottombar.w3-border-red.w3-border.w3-display-container
+                          p   
+                            b Descrição: 
+                            | #{pedido.info}
+                          p   
+                            b Pedido de: 
+                            | #{pedido.feitoPor}
+                          
+                          p.w3-center
+                            form(action=`/cursos/${pedido.curso}/entrar/cancelar` method="POST" style="display: inline-block;")
+                              input(type="hidden" name="_id" value=pedido._id)
+                              input(type="hidden" name="feitoPor" value=pedido.feitoPor)
+                              button.w3-button.w3-red.w3-round.w3-margin(type="submit") Cancelar
+                            form(action=`/cursos/${pedido.curso}/entrar/confirmar` method="POST" style="display: inline-block;")
+                              input(type="hidden" name="_id" value=pedido._id)
+                              input(type="hidden" name="feitoPor" value=pedido.feitoPor)
+                              button.w3-button.w3-green.w3-round.w3-margin(type="submit") Aceitar
+
                 each not in noticia.notificacao 
                   if not.lida == false
                    .w3-container(onmouseenter=`markAsRead('${noticia.username}','${not._id}','${noticia.porta}')`)

@@ -82,6 +82,16 @@ module.exports.entrarCurso = (idCurso,token) => {
     return axios.get(`${url}/cursos/${idCurso}/entrar`,{headers: { Cookie: `token=${token}` }});
 }
 
+module.exports.confirmarEntradaCurso = (idCurso,body,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/cursos/${idCurso}/entrar/confirmar`,body,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.cancelarEntradaCurso = (idCurso,body,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/cursos/${idCurso}/entrar/cancelar`,body,{headers: { Cookie: `token=${token}` }});
+}
+
 
 module.exports.getTypesActives = (token) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;

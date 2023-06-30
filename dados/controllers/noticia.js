@@ -43,6 +43,15 @@ module.exports.lida = (id, notificacao) => {
         });
 }
 
+module.exports.resposta = (id, notificacao, resposta) => {
+    return Noticia.findOneAndUpdate({ username: id, "pedido._id": notificacao}, { $set: { "pedido.$.respondido": true , "pedido.$.aceite": resposta } })
+        .then(noticia => {
+            return noticia;
+        }).catch(err => {
+            return err;
+        });
+}
+
 module.exports.insertPedido = (id, pedido) => {
     return Noticia.findOneAndUpdate({ username: id }, { $push: { pedido: pedido } })
         .then(noticia => {

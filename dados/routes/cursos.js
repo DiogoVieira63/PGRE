@@ -174,8 +174,6 @@ router.delete("/:curso/removealuno/:studentid",/*verifyJWT,verifyRegente*/functi
 });
 
 
-
-
 router.delete("/:curso/removeprofessor/:profid",/*verifyJWT,verifyRegente*/function (req, res, nxt) {
   // remover metas que apenas pertencem a este curso, depois
   Curso.removeProfessor(req.params.curso, req.params.profid)
@@ -256,6 +254,117 @@ router.post("/:curso/:post/edit"/*,verifyJWT,verifyProfessor*/,function (req, re
 router.post("/:curso/edit",verifyJWT,verifyCourse,verifyProfessor,function (req, res, nxt) {
     Curso.editCurso(req.params.curso,req.body).then((curso) => {
         res.status(201).jsonp(curso);
+    }).catch((err) => {
+        nxt(err);
+    });
+
+});
+
+
+router.post("/:curso/entrar/confirmar",verifyJWT,function (req, res, nxt) {
+    var nomeCurso = req.params.curso;
+    var username = req.user.username;
+    console.log("BODY: ", req.body)
+    Curso.getOne(nomeCurso)
+    .then((curso) => {
+        if (curso.regente == username){
+            Curso.addAluno(curso,req.body.feitoPor)
+            .then((resp) => { 
+                console.log("CONFIRMAR")
+
+                Noticia.resposta(username, req.body._id, true)
+                .then((not) => {
+                    let notificacao = {
+                        "descricao": `O seu pedido para entrar no curso ${curso.nome} foi aceite.`,
+                        "lida": false,
+                        "link": `/cursos/${curso._id}`,
+                    }                
+                    Noticia.insertNotificacao(req.body.feitoPor, notificacao)
+                    .then((notificacao) => {
+                        console.log("Notificacao adicionada com sucesso");
+                        res.status(201).jsonp(curso);
+                    }).catch((err) => {
+                        console.log(err);
+                        res.status(500).jsonp({error: err});
+                    })
+                }).catch((err) => {
+                    console.log(err);
+                    res.status(500).jsonp({error: err});
+                })
+            }).catch((err) => {
+                res.status(500).jsonp({error: err});
+            });
+        }
+    }).catch((err) => {
+        res.status(500).jsonp({error: err});
+    });
+});
+
+
+router.post("/:curso/entrar/cancelar",verifyJWT,function (req, res, nxt) {
+    var nomeCurso = req.params.curso;
+    var username = req.user.username;
+    console.log("BODY: ", req.body)
+    
+    Curso.getOne(nomeCurso)
+    .then((curso) => {
+        Noticia.resposta(username, req.body._id, false)
+        .then((not) => {
+            console.log(not)
+
+            let notificacao = {
+                "descricao": `O seu pedido para entrar no curso ${curso.nome} foi recusado.`,
+                "lida": false
+            }                
+            Noticia.insertNotificacao(req.body.feitoPor, notificacao)
+            .then((notificacao) => {
+                console.log("Notificacao adicionada com sucesso");
+                res.status(201).jsonp(curso);
+            }).catch((err) => {
+                console.log(err);
+                res.status(500).jsonp({error: err});
+            })
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).jsonp({error: err});
+        })
+    }).catch((err) => {
+        res.status(500).jsonp({error: err});
+    });
+
+});
+
+router.post("/:curso/entrar/confirmar",verifyJWT,function (req, res, nxt) {
+    var nomeCurso = req.params.curso;
+    var username = req.user.username;
+
+    Curso.getOne(nomeCurso)
+    .then((curso) => {
+        if (curso.regente == username){
+            console.log("CONFIRMAR")
+            let notificacao = {
+                "descricao": `O seu pedido para entrar no curso ${curso.nome} foi aceite.`,
+                "lida": false,
+                "link": `/cursos/${cursoId}`,
+            }
+            Noticia.insertNotificacao(curso.alunos[i], notificacao).then((notificacao) => {
+                console.log("Notificacao adicionada com sucesso");
+            }).catch((err) => {
+                console.log(err);
+                res.status(500).jsonp({error: err});
+            })
+
+         
+
+        }
+        else if (curso.visibilidade == 'publico'){
+            Curso.addAluno(curso,username)
+            .then((curso) => {
+                res.status(201).jsonp(curso);
+            }).catch((err) => {
+                nxt(err);
+            });
+        }
     }).catch((err) => {
         nxt(err);
     });
