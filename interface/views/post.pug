@@ -92,7 +92,7 @@ block content
       table.w3-table-all.w3-centered
         +createRow("Título", post.title)
         +createRow("Descrição", post.description)
-        - let publishedByProf = profs.find(prof => prof.username === post.publishedBy)
+        - let publishedByProf = nomes.find(prof => prof.username === post.publishedBy)
         tr 
           td
             b Publicado por
@@ -103,12 +103,35 @@ block content
           - if (meta.subtitle)
             +createRowObjectRecurso("Recurso partilhado",{"Título": meta.title, "Subtítulo": meta.subtitle, "Descrição": meta.description})
           - else 
-            +createRowObjectRecurso("Recurso partilhado",{"Título": meta.title, "Descrição": meta.description})
-        +createRow("Comentários", "")
+            +createRowObjectRecurso("Recurso partilhado",{"Título": meta.title, "Descrição": meta.description})      
+        tr
+          td
+            b Comentários
+          td 
+            span
+              a.w3-round.w3-button.w3-indigo(href=`${current_path}/comentar`) Adicionar Comentário  
+                i.fa.fa-plus
+                 
+         
       each comment in post.comments       
         .w3-container
           .w3-panel.w3-light-grey.w3-leftbar.w3-rightbar.w3-border-grey.w3-display-container 
               p= comment.comment
+              p 
+                - let comentadoPor = nomes.find(user => user.username === comment.idUser)
+                b Comentado por: 
+                a(href=`/users/${comentadoPor.id}`) #{comentadoPor.name} (#{comentadoPor.username})
+
+              if comment.idUser == user
+                 p.w3-center
+                    form(action=`${current_path}/comentar/remover` method="POST" style="display: inline-block;")
+                      input(type="hidden" name="_id" value=comment._id)
+                      input(type="hidden" name="idUser" value=comment.idUser)
+                      button.w3-button.w3-red.w3-round.w3-margin(type="submit") Remover
+                    form(action=`${current_path}/comentar/remover` method="POST" style="display: inline-block;")
+                      input(type="hidden" name="_id" value=comment._id)
+                      input(type="hidden" name="idUser" value=comment.idUser)
+                      button.w3-button.w3-indigo.w3-round.w3-margin(type="submit") Editar
 
       //- ADICIONAR meta file 
 

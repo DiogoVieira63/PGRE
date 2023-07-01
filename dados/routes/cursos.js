@@ -195,13 +195,15 @@ router.delete("/remove/:curso",/*verifyJWT,verifyRegente*/function (req, res, nx
   });
 });
 
-router.post("/:curso/:post/addcomment"/*,verifyJWT,verifyCourse*/,function (req, res, nxt) {
+router.post("/:curso/:post/addcomment",verifyJWT,verifyCourse,function (req, res, nxt) {
   var curso = req.params.curso;
   var post = req.params.post;
   var comment = req.body.comment;
-  // var username = req.user.username;
-  Curso.addCommentPost(curso,post,comment)
+  var user = req.user.username;
+
+  Curso.addCommentPost(curso,post,comment,user)
   .then((curso) => {
+      console.log("CURSO: ", curso)
       res.status(201).jsonp(curso);
   }).catch((err) => {
       nxt(err);
@@ -225,7 +227,7 @@ router.post("/:curso/:post/:idcomment/editcomment"/*,verifyJWT,verifyCourse*/,fu
 });
 
 
-router.delete("/:curso/:post/:idcomment/removecomment"/*,verifyJWT,verifyCourse*/,function (req, res, nxt) {
+router.delete("/:curso/:post/:idcomment/removecomment",verifyJWT,verifyCourse,function (req, res, nxt) {
   var curso = req.params.curso;
   var post = req.params.post;
   var idcomment = req.params.idcomment;

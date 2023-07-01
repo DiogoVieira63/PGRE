@@ -115,11 +115,12 @@ module.exports.addPost = (idcurso, post) => {
     });
 }
 
-module.exports.addCommentPost = (idcurso, idpost, comment) => {
-
+module.exports.addCommentPost = (idcurso, idpost, comment,idUser) => {
+    
     let commentSchema = {
         _id: new mongoose.Types.ObjectId(),
         comment: comment,
+        idUser: idUser
     };
 
     return Curso.updateOne(

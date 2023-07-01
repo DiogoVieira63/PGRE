@@ -134,3 +134,13 @@ module.exports.addPost= (body,username,token) => {
     return axios.post(`${url}/cursos/${course}/addpost`, post,{headers: { Cookie: `token=${token}` }});
 
 }
+
+module.exports.comment = (comment,token,idCurso,idPost) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/cursos/${idCurso}/${idPost}/addcomment`, comment,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.removeComment = (token,idCurso,idPost,idComment) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.delete(`${url}/cursos/${idCurso}/${idPost}/${idComment}/removecomment`,{headers: { Cookie: `token=${token}` }});
+}

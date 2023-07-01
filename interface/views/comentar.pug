@@ -1,0 +1,12 @@
+extends layout
+
+block content
+  h1.w3-center Comentar Post
+  .w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+    form.w3-form(action=`${current_path}`, method='POST')
+      div
+        label(for='Comentário')
+        b Comentário
+        input.w3-input(type='text', name='comment', required='required')
+      div
+        input.w3-input(type='submit', value='Comentar Post').w3-button.w3-blue.w3-margin-top

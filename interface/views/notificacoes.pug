@@ -8,7 +8,7 @@ block content
         .w3-container
 
             each pedido in noticia.pedido 
-                  if pedido.respondido == false 
+                if pedido.respondido == false 
                     .w3-container
                         .w3-panel.w3-bottombar.w3-border-red.w3-border.w3-display-container
                             p   
@@ -28,6 +28,34 @@ block content
                                 input(type="hidden" name="feitoPor" value=pedido.feitoPor)
                                 button.w3-button.w3-green.w3-round.w3-margin(type="submit") Aceitar
                         
+                else 
+                    .w3-container
+                        if pedido.aceite
+                            .w3-panel.w3-bottombar.w3-border-green.w3-border.w3-display-container
+                                p   
+                                  b Descrição: 
+                                  | #{pedido.info}
+                                p   
+                                  b Pedido de: 
+                                  | #{pedido.feitoPor}
+                                p 
+                                  b Aceite: 
+                                  i.w3-green.w3-xlarge.fa.fa-check
+                        else
+                            .w3-panel.w3-bottombar.w3-border-red.w3-border.w3-display-container
+                                p   
+                                  b Descrição: 
+                                  | #{pedido.info}
+                                p   
+                                  b Pedido de: 
+                                  | #{pedido.feitoPor}
+                                p 
+                                  b Aceite: 
+                                  i.w3-red.w3-xlarge.fa.fa-times
+
+
+
+
 
             each notificacao in noticia.notificacao
                 if notificacao.lida 
