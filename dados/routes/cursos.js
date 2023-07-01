@@ -211,11 +211,15 @@ router.post("/:curso/:post/addcomment",verifyJWT,verifyCourse,function (req, res
 });
 
 // VERIFICAR SE USER FEZ O COMENTARIO
-router.post("/:curso/:post/:idcomment/editcomment"/*,verifyJWT,verifyCourse*/,function (req, res, nxt) {
+router.post("/:curso/:post/:idcomment/editcomment",verifyJWT,verifyCourse,function (req, res, nxt) {
+  console.log("OI")
   var curso = req.params.curso;
+  console.log(curso)
   var post = req.params.post;
+  console.log(post)
   var idcomment = req.params.idcomment;
-
+  console.log(idcomment)
+  console.log("body edit: ", req.body)
   var comment = req.body.comment;
   // var username = req.user.username;
   Curso.editCommentPost(curso,post,idcomment,comment)

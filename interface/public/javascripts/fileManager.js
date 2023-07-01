@@ -66,22 +66,124 @@ function dropdown(id) {
   }
 }
 
-
 function searchTable(inputId, tableId) {
   var input, filter, table, tr, td, i, txtValue;
   input = document.getElementById(inputId);
   filter = input.value.toUpperCase();
   table = document.getElementById(tableId);
   tr = table.getElementsByTagName("tr");
+
+  var skipNextRow = false; // Flag to skip the row following the filtered row
+  var hiddenRows = []; // Array to store the indexes of hidden rows
+
   for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
+    if (skipNextRow) {
+      skipNextRow = false;
+      continue;
+    }
+
+    td = [tr[i].getElementsByTagName("td")[0], tr[i].getElementsByTagName("td")[1]];
+    if (td[0] || td[1]) {
+      txtValue = (td[0] ? td[0].textContent || td[0].innerText : '') + (td[1] ? td[1].textContent || td[1].innerText : '');
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+        hiddenRows.push(i + 1); // Store the index of the next row to skip
+        skipNextRow = true; // Set flag to skip the next row
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+
+  // Restore visibility for previously hidden rows
+  hiddenRows.forEach(function(row) {
+    if (tr[row]) {
+      tr[row].style.display = "";
+    }
+  });
+}
+
+function searchSimpleTable(inputId, tableId) {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById(inputId);
+  filter = input.value.toUpperCase();
+  table = document.getElementById(tableId);
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) { 
+    td = [tr[i].getElementsByTagName("td")[0], tr[i].getElementsByTagName("td")[1]];
+    if (td[0] || td[1]) {
+      txtValue = (td[0] ? td[0].textContent || td[0].innerText : '') + (td[1] ? td[1].textContent || td[1].innerText : '');
       if (txtValue.toUpperCase().indexOf(filter) > -1) {
         tr[i].style.display = "";
       } else {
         tr[i].style.display = "none";
       }
-    }       
+    }
   }
 }
+
+function openEditModal(id) {
+  document.getElementById(id).style.display = "block";
+}
+
+function closeEditModal(id) {
+  document.getElementById(id).style.display = "none";
+}
+
+// Filter table based on selected values
+function applyFilters() {
+  var visibilidade = $('input[name="visibilidade"]:checked').val();
+  var inscrito = $('input[name="inscrito"]:checked').val();
+
+  // Show/hide table rows based on filter values
+  $('#listaCursos tr').each(function(index) {
+    if (index === 0) return;
+
+    var rowVisibilidade = $(this).find('td:eq(2) i').hasClass('fa-unlock');
+    var rowInscrito = $(this).find('td:eq(3) i').hasClass('fa-check');
+
+    if ((visibilidade === 'todos' || (visibilidade === 'publico' && rowVisibilidade) || (visibilidade === 'privado' && !rowVisibilidade)) &&
+        (inscrito === 'todos' || (inscrito === 'sim' && rowInscrito) || (inscrito === 'nao' && !rowInscrito))) {
+      $(this).show();
+    } else {
+      $(this).hide();
+    }
+  });
+}
+
+function applyFiltersMaintainNextRow() {
+  var table = document.getElementById("meusCursos");
+  var rows = table.getElementsByTagName("tr");
+
+  var visibility = document.querySelector('input[name="visibilidade"]:checked').value;
+
+  var previousRowVisible = true;
+
+  for (var i = 1; i < rows.length; i++) {
+    var row = rows[i];
+    var visibilityCell = row.getElementsByTagName("td")[2];
+    var nextRow = row.nextElementSibling;
+
+    if (visibilityCell) {
+      var visibilityIcons = visibilityCell.getElementsByTagName("i");
+      var isPrivate = visibilityIcons[0].classList.contains("fa-lock");
+
+      if (visibility === "todos" || (visibility === "privado" && isPrivate) || (visibility === "publico" && !isPrivate)) {
+        row.style.display = "";
+        previousRowVisible = true;
+      } else {
+        row.style.display = "none";
+        previousRowVisible = false;
+      }
+
+      if (nextRow) {
+        if (previousRowVisible) {
+          nextRow.style.display = "";
+        } else {
+          nextRow.style.display = "none";
+        }
+      }
+    }
+  }
+}
+

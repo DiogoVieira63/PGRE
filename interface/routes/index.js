@@ -119,13 +119,15 @@ router.get('/cursos/:curso/files/upload', checkLoggin, function (req, res, next)
       }));
 });
 
+router.get('/cursos/:id/posts/:idpost/editar', checkLoggin, function (req, res, next) {
+  console.log(req.path)
+  res.render('editComment', { nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias, current_path: req.path, comment});
+});
 
 router.get('/cursos/:id/posts/:idpost/comentar', checkLoggin, function (req, res, next) {
   console.log(req.path)
   res.render('comentar', { nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias, current_path: req.path });
 });
-
-
 
 router.post('/cursos/:id/posts/:idpost/comentar/remover', checkLoggin, function (req, res, next) {
   let idCurso = req.params.id
@@ -142,8 +144,22 @@ router.post('/cursos/:id/posts/:idpost/comentar/remover', checkLoggin, function 
         }));
   }
 
+});
 
-  
+router.post('/cursos/:id/posts/:idpost/comentar/editar', checkLoggin, function (req, res, next) {
+  let idCurso = req.params.id
+  let idPost = req.params.idpost
+  let commentId = req.body._id
+  console.log("BODY COMMENT: ", req.body)
+
+  if (req.body.idUser == req.user.username){
+    Dados.editComment(req.cookies['token'],idCurso,idPost,commentId, req.body)
+      .then(dados => {
+        res.redirect(`/cursos/${idCurso}/posts/${idPost}`);
+      }).catch(err => 
+        res.render('error', {error: err
+        }));
+  }
 
 });
 
@@ -182,7 +198,9 @@ router.get('/cursos/:id/posts/:idpost', checkLoggin, function (req, res, next) {
         // res.render('post',{post: dados.data, meta: file.data.meta,nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
 
         console.log("PUB: ", dados.data.publishedBy)
-        Auth.getNames([dados.data.publishedBy], req.cookies['token']).then(nomes => {
+        let uniqueIdUsers = [...new Set(dados.data.comments.map(item => item.idUser))];
+        let combinedArray = [dados.data.publishedBy].concat(uniqueIdUsers);
+        Auth.getNames(combinedArray, req.cookies['token']).then(nomes => {
           res.render('post', { post: dados.data, meta: file.data.meta, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias, nomes: nomes.data, current_path: req.path, user: req.user.username });
         })
           .catch(err => res.render('error', { error: err }));

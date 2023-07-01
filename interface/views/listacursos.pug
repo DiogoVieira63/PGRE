@@ -5,7 +5,49 @@ block content
 	.w3-card-4
 		header.w3-indigo
 			h2.w3-margin-left(style="display: inline")=titulo
-			input#searchListaCursos.w3-right.w3-margin(type="text", onkeyup="searchTable('searchListaCursos','listaCursos')", placeholder="Pesquisar", title="Inserir nome ou tag")
+			.w3-button.w3-right.w3-dropdown-click(onclick="openEditModal('filtros')") Filtros
+			.modal.w3-display-middle(id="filtros" style="max-width: 1000px; margin: 15vh auto; position: fixed;")
+				span.w3-button.w3-red.w3-xlarge.w3-display-topright(onclick="closeEditModal('filtros')")
+					i.w3-xlarge.fa.fa-times
+				.w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+					h2.w3-center Aplicar Filtros
+					//- form.w3-form(action='/cursos', method='POST')
+					.w3-container
+						div
+							h4
+								b Visibilidade
+							input.w3-radio(type='radio' name='visibilidade' value='todos' checked="checked" onchange='applyFilters()')
+							label(for="todos_vis") Todos
+							p
+							input.w3-radio(type='radio', name='visibilidade' value='publico' onchange='applyFilters()')
+							label(for="publico") Público
+							p
+							input.w3-radio(type='radio', name='visibilidade' value='privado' onchange='applyFilters()')
+							label(for="privado") Privado
+							p 
+							input.w3-radio(type='radio', name='visibilidade' value='convite' onchange='applyFilters()')
+							label(for="convite") Convite        
+							div
+						div
+							h4
+								b Inscrito
+							input.w3-radio(type='radio', name='inscrito' value='todos' checked="checked" onchange='applyFilters()')
+							label(for="todos_insc") Todos
+							p
+							input.w3-radio(type='radio', name='inscrito' value='sim' onchange='applyFilters()')
+							label(for="sim") Sim
+							p 
+							input.w3-radio(type='radio', name='inscrito' value='nao' onchange='applyFilters()')
+							label(for="nao") Não        
+							div
+						//- div
+						//- 	input.w3-input(type='submit', value='Aplicar Curso', onclick='applyFilters(event)')
+
+
+
+			//- input#filterValue.w3-right.w3-margin(type="text", onkeyup="filterTable()", placeholder="Filtrar por...", title="Inserir filtro")
+
+			input#searchListaCursos.w3-right.w3-margin(type="text", onkeyup="searchSimpleTable('searchListaCursos','listaCursos')", placeholder="Pesquisar", title="Inserir nome ou tag")
 		.w3-container
 			table#listaCursos.w3-table.w3-bordered
 				tr
@@ -14,7 +56,7 @@ block content
 					th Visibilidade
 					th Inscrito
 				each curso in cursos
-					tr
+					tr(id=`curso_${curso._id}`)
 						td 
 							a(href=`/cursos/${curso._id}`)
 								b= curso.nome
