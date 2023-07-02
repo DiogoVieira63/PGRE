@@ -7,8 +7,7 @@
 A Aplicação Web desenvolvilda consiste, assim como o próprio nome indica, numa aplicação que gere e disponibiliza recursos educativos. A aplicação é destinada quer a alunos como a professores.
 
 ## ⚙️ **Setup**
-
-
+Para fazer o setup da plataforma, é necessário correr o comando *sudo docker compose up* na diretoria do projeto e posteriormente, num browser, aceder à *landing page* através do link **localhost:8888**.
 
 ## 🎯 **Objetivos**
 A conceção da Aplicação Web apresenta os seguintes requisitos base:
