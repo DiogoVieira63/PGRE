@@ -14,18 +14,20 @@ const verifyAdmin = Permission.admin;
 
 
 // new type request
-router.post("/",verifyJWT,verifyProfessor, function (req, res, nxt){
-  var type = req.params.type;
-  var type = {
+router.post("/",verifyJWT,verifyAdmin, function (req, res, nxt){
+  let type = {
     id: req.body.id,
-    state: "pending"
-  };
+    state: "active"
+  }
   Type.insert(type).then((type) => {
-    res.status(201).send();
+    console.log("Type",type);
+    res.jsonp({type});
   }).catch((err) => {
+    console.log(err);
     res.status(500).jsonp({error: err});
   });
-});    
+});
+
 
 
 
@@ -53,32 +55,7 @@ router.get("/active",verifyJWT, function (req, res, nxt){
 });
 
 
-// approve type
-router.post("/approve",verifyJWT,verifyAdmin, function (req, res, nxt){
-  var id = req.body.id;
-  var type = {
-    id: id,
-    state: "approved"
-  };
-  Type.update(id, type).then((type) => {
-    res.status(201).send();
-  }).catch((err) => {
-    res.status(500).jsonp({error: err});
-  });
-});
 
-
-
-
-// reject type
-router.post("/reject",verifyJWT,verifyAdmin, function (req, res, nxt){
-  var id = req.body.id;
-  Type.delete(id).then((type) => {
-    res.status(201).send();
-  }).catch((err) => {
-    res.status(500).jsonp({error: err});
-  });
-});
 
 
 

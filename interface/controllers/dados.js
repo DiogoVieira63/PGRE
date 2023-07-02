@@ -180,4 +180,19 @@ module.exports.getUniversidades = () => {
     return axios.get(`${url}/universidades`);
 }
 
+module.exports.addUniversidade = (body,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/universidades`,body,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.addDepartamento = (body,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/universidades/departamento`,body,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.addTipo = (body,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/meta/types`,body,{headers: { Cookie: `token=${token}` }});
+}
+
 

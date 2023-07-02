@@ -1,0 +1,13 @@
+extends layout
+
+
+
+block content
+  h1.w3-center Adicionar Tipo de Ficheiro
+  .w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+    form.w3-form(action='/tipos', method='POST')
+      div
+        label(for='nome')
+        b Nome
+        input.w3-input(type='text', name='id', required='required')
+      input.w3-input(type='submit', value='Adicionar Tipo de Ficheiro').w3-button.w3-blue.w3-margin-top

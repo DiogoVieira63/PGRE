@@ -13,3 +13,25 @@ module.exports.getAll = () => {
     });
 }
 
+
+module.exports.insert = (body) => {
+    return Universidade.create(body).then(uni => {
+        return uni;
+    }).catch(err => {
+        return err;
+    });
+}
+
+module.exports.insertDepartamento = (body) => {
+    return Universidade.findOneAndUpdate(
+        { _id: body.universidade },
+        { $push: { departamentos: body.departamento } },
+    ).then(uni => {
+        return uni;
+    }).catch(err => {
+        return err;
+    })
+}
+
+
+

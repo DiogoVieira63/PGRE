@@ -687,6 +687,22 @@ router.get('/notificacao/form', checkLoggin, function (req, res, next) {
   res.render('notificacaoForm', { noticia: req.noticias, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos })
 });
 
+router.get('/universidade/form', checkLoggin, function (req, res, next) {
+  res.render('universidadeForm', { noticia: req.noticias, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos })
+});
+
+router.get('/departamento/form', checkLoggin, function (req, res, next) {
+  Dados.getUniversidades(req.cookies['token']).then(dados => {
+    res.render('departamentoForm', { noticia: req.noticias, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, universidades: dados.data.universidades })
+  }).catch(err => {
+    res.render('error', { error: err.message });
+  });
+});
+
+router.get('/tipos/form', checkLoggin, function (req, res, next) {
+  res.render('tiposForm', { noticia: req.noticias, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos })
+});
+
 
 router.post('/notificacao', checkLoggin, function (req, res, next) {
   let cookie = req.cookies['token'];
@@ -698,6 +714,37 @@ router.post('/notificacao', checkLoggin, function (req, res, next) {
   });
 });
 
+
+
+router.post('/universidade', checkLoggin, function (req, res, next) {
+  let cookie = req.cookies['token'];
+  Dados.addUniversidade(req.body, cookie).then(dados => {
+    console.log("Universidade adicionada com sucesso");
+    res.redirect('/');
+  }).catch(err => {
+    res.render('error', { error: err.message });
+  });
+});
+
+router.post('/departamento', checkLoggin, function (req, res, next) {
+  let cookie = req.cookies['token'];
+  Dados.addDepartamento(req.body, cookie).then(dados => {
+    console.log("Departamento adicionado com sucesso");
+    res.redirect('/');
+  }).catch(err => {
+    res.render('error', { error: err.message });
+  });
+});
+
+router.post('/tipos', checkLoggin, function (req, res, next) {
+  let cookie = req.cookies['token'];
+  Dados.addTipo(req.body, cookie).then(dados => {
+    console.log("Tipo adicionado com sucesso");
+    res.redirect('/');
+  }).catch(err => {
+    res.render('error', { error: err.message });
+  });
+});
 
 
 

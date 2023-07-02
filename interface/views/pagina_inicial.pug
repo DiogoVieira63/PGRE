@@ -1,6 +1,16 @@
 extends layout
 
 block content
+    if user.level == 'admin'
+        .w3-card-4.w3-bar.w3-content.w3-margin-top.w3-margin-bottom 
+            .w3-bar-item.w3-button.w3-white.w3-hover-amber(style="width: 25%")
+                a(href='/universidade/form') Adicionar Universidade
+            .w3-bar-item.w3-button.w3-white.w3-hover-amber(style="width: 25%")
+                a(href='/departamento/form') Adicionar Departamento
+            .w3-bar-item.w3-button.w3-white.w3-hover-amber(style="width: 25%")
+                a(href='/notificacao/form') Criar Notificação
+            .w3-bar-item.w3-button.w3-white.w3-hover-amber(style="width: 25%")
+                a(href='/tipos/form') Adicionar Tipo de Ficheiro
     .w3-card-4
         header.w3-indigo(style="padding: 10px 0;")
             h2.w3-margin-left(style="display: inline")=titulo
@@ -71,8 +81,5 @@ block content
                 
         footer.w3-indigo
             address Generated in RPCW :: #{data}
-    if user.level == 'admin'
-        .w3-content.w3-center.w3-margin-top
-            button.w3-button.w3-amber.w3-round
-                a(href='/notificacao/form') Criar Notificação
+
     

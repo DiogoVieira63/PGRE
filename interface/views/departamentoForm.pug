@@ -1,0 +1,19 @@
+extends layout
+
+
+
+block content
+  h1.w3-center Adicionar Departamento
+  .w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+    form.w3-form(action='/departamento', method='POST')
+      div
+        label(for='Universidade')
+        b Universidade
+        select.w3-select(name='universidade')
+          for universidade in universidades
+            option(value=universidade._id)= universidade.nome
+      div
+        label(for='departamento')
+        b Nome
+        input.w3-input(type='text', name='departamento', required='required')
+      input.w3-input(type='submit', value='Adicionar Departamento').w3-button.w3-blue.w3-margin-top

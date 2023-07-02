@@ -23,4 +23,25 @@ router.get("/",function (req, res, nxt){
 });
 
 
+router.post("/",verifyJWT,verifyAdmin,function (req, res, nxt){
+    Universidade.insert(req.body).then((universidade) => {
+        console.log("Universidade",universidade);
+        res.jsonp({universidade});
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).jsonp({error: err});
+    });
+});
+
+router.post("/departamento",verifyJWT,verifyAdmin,function (req, res, nxt){
+    Universidade.insertDepartamento(req.body).then((universidade) => {
+        console.log("Universidade",universidade);
+        res.jsonp({universidade});
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).jsonp({error: err});
+    });
+});
+
+
 module.exports = router;
