@@ -398,6 +398,7 @@ router.get("/:curso/entrar",verifyJWT,function (req, res, nxt) {
 
             Noticia.insertPedido(curso.regente, pedido).then((notificacao) => {
                 console.log("Notificacao(Pedido) adicionada com sucesso");
+                res.status(201).jsonp(curso);
             }).catch((err) => {
                 console.log(err);
                 res.status(500).jsonp({error: err});

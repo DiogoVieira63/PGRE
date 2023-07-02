@@ -378,11 +378,23 @@ router.get('/cursos/:id', checkLoggin, function (req, res, next) {
             if (dados.data.curso.regente == req.user.username) {
               edit = true
             }
-            res.render('curso', {
-              curso: dados.data.curso, profs: nomes.data, metas: metas.data.metas,
-              permission: dados.data.permission, edit: edit, level: req.user.level, average: average,
-              nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias
-            })
+
+            Dados.getCertainPedido(req.params.id,req.cookies['token'])
+            .then(pedido => {
+              console.log("PEDIDO: ",pedido.data)
+              let check_pedido = false
+              if (pedido.data!=null) check_pedido = true
+              console.log(check_pedido)
+              res.render('curso', {
+                curso: dados.data.curso, profs: nomes.data, metas: metas.data.metas,
+                permission: dados.data.permission, edit: edit, level: req.user.level, average: average,
+                nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias, pedido:check_pedido
+              })
+            }).catch(err => 
+              res.render('error', {error: err
+            }));
+
+            
           })
             .catch(err => res.render('error', { error: err }));
 

@@ -71,6 +71,15 @@ router.post("/lida",/*verifyJWT,*/function (req, res, nxt) {
         });
 });
 
+router.get("/getpedido",verifyJWT, function (req, res, nxt) {
+    var username = req.user.username;
+    var curso = req.query.curso
+    Noticia.getCertainPedido(username,curso).then((noticia) => {
+        res.status(200).jsonp(noticia);
+    }).catch((err) => {
+        res.status(500).jsonp({error: err});
+    });
+});
 
 router.get("/",verifyJWT, function (req, res, nxt) {
     var username = req.user.username;
@@ -87,7 +96,6 @@ function notificacaoCurso (curso,notificacao){
     console.log("Notificacao curso");
 
 }
-
 
 
 

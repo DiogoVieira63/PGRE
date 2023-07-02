@@ -62,3 +62,13 @@ module.exports.insertPedido = (id, pedido) => {
         })
 }
 
+
+module.exports.getCertainPedido = (username, curso) => {
+    return Noticia.findOne({ 'pedido.curso': curso, 'pedido.feitoPor': username , 'pedido.respondido':false}, { 'pedido.$': 1 })
+        .then(noticia => {
+            return noticia;
+        })
+        .catch(err => {
+            return err;
+        })
+}

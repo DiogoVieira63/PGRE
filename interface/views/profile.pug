@@ -67,6 +67,7 @@ block content
     table.w3-table-all.w3-centered
       +createRow("Nome", user.name)
       +createRow("Email", user.username)
+      +createRow("Cargo", user.level)
       - 
       - if (user.affiliation)
         +createRowObject("Afiliação",{"Universidade": user.affiliation.university, "Departamento": user.affiliation.department})

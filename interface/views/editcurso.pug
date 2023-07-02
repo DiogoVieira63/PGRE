@@ -39,8 +39,9 @@ mixin createRowArray(nome, key,tipo)
           li
             input.w3-input.w3-round.w3-twothird(type="hidden" name=key value=v.username)
             p.w3-twothird #{v.name} (#{v.username})
-            button.w3-button.w3-round.w3-right(onclick=`removeFromArray(this)` type="button")
-              i(class="fa fa-times" aria-hidden="true" style="color: red;")
+            if v.username != curso.regente
+              button.w3-button.w3-round.w3-right(onclick=`removeFromArray(this)` type="button")
+                i(class="fa fa-times" aria-hidden="true" style="color: red;")
         
 
 mixin boolToEmoji(value)

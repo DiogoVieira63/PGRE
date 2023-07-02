@@ -155,3 +155,8 @@ module.exports.removeAluno = (token,idCurso,aluno) => {
     return axios.delete(`${url}/cursos/${idCurso}/removealuno`,{params:{aluno},headers: { Cookie: `token=${token}` }});
 }
 
+module.exports.getCertainPedido = (curso, token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/noticias/getpedido`,{params:{curso},headers: { Cookie: `token=${token}` }});
+}
+

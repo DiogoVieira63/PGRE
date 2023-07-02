@@ -20,6 +20,7 @@ const verifyCourse = Permission.course;
 router.post("/", verifyJWT, function (req, res, nxt) {
   var file = req.body.file;
   console.log(file);
+  console.log("BODY CHECK: ",req.body)
   var body = req.body.body;
   var meta = {
     id: file.filename,
@@ -29,7 +30,7 @@ router.post("/", verifyJWT, function (req, res, nxt) {
     description: body.description,
     creationDate: new Date(body.creationDate).toISOString().substring(0, 19),
     registationDate: new Date().toISOString().substring(0, 19),
-    tags: body.tags,
+    tags: body.tag,
     theme: body.theme,
     ratings: [],
     author: body.author,
@@ -38,7 +39,6 @@ router.post("/", verifyJWT, function (req, res, nxt) {
     mimetype: file.mimetype,
     size: file.size,
   };
-
 
   
   Meta.insert(meta)
