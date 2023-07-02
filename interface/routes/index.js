@@ -95,8 +95,9 @@ router.get('/', checkLoggin, function (req, res, next) {
     .then(dados => {
       data = new Date().toISOString().substring(0, 16)
 
+      dados.data.sort((a, b) => a.nome.localeCompare(b.nome));
 
-      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos", nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias });
+      res.render('pagina_inicial', { cursos: dados.data, data: data, titulo: "Meus Cursos", nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias , user: req.user});
     })
     .catch(err => res.render('error', { error: err }));
 
@@ -281,6 +282,8 @@ router.get('/cursos', checkLoggin, function (req, res, next) {
         }
       }
       date = new Date().toISOString().substring(0, 16)
+      dados.data.sort((a, b) => a.nome.localeCompare(b.nome));
+
       res.render('listacursos', { cursos: dados.data, data: date, titulo: "Lista de Cursos", nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias });
     })
     .catch(err => res.render('error', { error: err }));
@@ -318,12 +321,32 @@ router.get('/cursos/:id/alunos', checkLoggin, function (req, res, next) {
 
       Auth.getNames(dados.data.curso.alunos, req.cookies['token']).then(nomes => {
         data = new Date().toISOString().substring(0, 16)
-        res.render('alunos', { curso: dados.data.nome, alunos: nomes.data, data: data, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias })
+        nomes.data.sort((a, b) => a.name.localeCompare(b.name));
+        res.render('alunos', { curso: dados.data.curso, alunos: nomes.data, data: data, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias , user:req.user})
       })
         .catch(err => res.render('error', { error: err }));
 
     })
     .catch(err => res.render('error', { error: err }));
+});
+
+router.post('/cursos/:id/alunos/remover', checkLoggin, function (req, res, next) {
+  console.log("ola")
+  let idCurso = req.params.id
+  console.log(idCurso)
+
+  let aluno = req.body.username
+  console.log(aluno)
+
+  if (req.body.regente == req.user.username){
+    Dados.removeAluno(req.cookies['token'],idCurso,aluno)
+      .then(dados => {
+        res.redirect(`/cursos/${idCurso}/`);
+      }).catch(err => 
+        res.render('error', {error: err
+        }));
+  }
+
 });
 
 router.get('/cursos/:id', checkLoggin, function (req, res, next) {

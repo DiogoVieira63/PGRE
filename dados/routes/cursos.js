@@ -163,9 +163,10 @@ router.post("/create",verifyJWT,/*verifyProfessor,*/function (req, res, nxt) {
 });
 
 // removeStudent
-router.delete("/:curso/removealuno/:studentid",/*verifyJWT,verifyRegente*/function (req, res, nxt) {
+router.delete("/:curso/removealuno",/*verifyJWT,verifyRegente*/function (req, res, nxt) {
   // remover metas que apenas pertencem a este curso, depois
-  Curso.removeAluno(req.params.curso, req.params.studentid)
+  console.log("CENAS: ",req.query.aluno)
+  Curso.removeAluno(req.params.curso, req.query.aluno)
   .then((curso) => {
       res.status(201).jsonp(curso);
   }).catch((err) => {

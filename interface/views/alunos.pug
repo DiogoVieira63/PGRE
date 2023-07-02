@@ -3,19 +3,27 @@ extends layout
 block content
 	.w3-container.w3-content
 	.w3-card-4
-		header.w3-indigo
-			h2 Alunos do Curso #{curso}
+		header.w3-indigo(style="padding: 10px 0;")
+			h2.w3-margin-left(style="display: inline") Alunos do Curso #{curso.nome}
+			.w3-right.w3-center
+				input#searchAlunos.w3-margin(type="text", onkeyup="searchSimpleTable('searchAlunos','alunosTable')", placeholder="Pesquisar", title="Inserir nome ou tag")
 		.w3-container
-			table.w3-table.w3-bordered
+			table#alunosTable.w3-table.w3-bordered
 				tr
 					th Nome
 					th Email
-					th Ações
+					if curso.regente == user.username
+						th Ações
 				each aluno in alunos
 					tr
 						td
 							a(href=`/users/${aluno.id}`) #{aluno.name}
 						td= aluno.username
-						td 
+						if curso.regente == user.username
+							td 
+								form(action=`/cursos/${curso._id}/alunos/remover` method="POST")
+									input(type="hidden" name="username" value=aluno.username)
+									input(type="hidden" name="regente" value=curso.regente)
+									button.w3-button.w3-red.w3-round(type="submit") Remover
 		footer.w3-indigo
 			address Generated in RPCW :: #{data}

@@ -3,12 +3,16 @@ extends layout
 block content
     .w3-container.w3-content
     .w3-card-4
-        header.w3-indigo
+        header.w3-indigo(style="padding: 10px 0;")
             h2.w3-margin-left(style="display: inline")=titulo
+                if user.level == 'professor'
                     span
                         a.w3-circle.w3-button(href=`/cursos/form`)
                             i.fa.fa-plus
-            .w3-button.w3-right(onclick="openEditModal('filtros')") Filtros
+            .w3-right.w3-center
+                input#searchPagInicial.w3-margin(type="text", onkeyup="searchTable('searchPagInicial','meusCursos')", placeholder="Pesquisar", title="Inserir nome ou tag")
+                button.w3-button.w3-white.w3-round.w3-margin-right(onclick="openEditModal('filtros')") Filtros
+
             .modal.w3-display-middle(id="filtros" style="max-width: 1000px; margin: 15vh auto; position: fixed;")
                 span.w3-button.w3-red.w3-xlarge.w3-display-topright(onclick="closeEditModal('filtros')")
                     i.w3-xlarge.fa.fa-times
@@ -31,7 +35,6 @@ block content
                             input.w3-radio(type='radio', name='visibilidade' value='convite' onchange='applyFiltersMaintainNextRow()')
                             label(for="convite") Convite        
                             div
-            input#searchPagInicial.w3-right.w3-margin(type="text", onkeyup="searchTable('searchPagInicial','meusCursos')", placeholder="Pesquisar", title="Inserir nome ou tag")
 
         .w3-container
             table#meusCursos.w3-table.w3-bordered
@@ -52,7 +55,7 @@ block content
                             else
                                 i.w3-xlarge.fa.fa-unlock 
                         td 
-                            button.w3-button.w3-grey.w3-card-4(onclick=`toggleAccordion('${curso._id}')`) Mostrar         
+                            button.w3-button.w3-indigo.w3-round.w3-card-4(onclick=`toggleAccordion('${curso._id}')`) Mostrar         
                     
                     tr
                         td(colspan=4)

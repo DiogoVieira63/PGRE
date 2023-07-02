@@ -149,3 +149,9 @@ module.exports.editComment = (token,idCurso,idPost,idComment,comment) => {
     let url = `http://localhost:${process.env.DADOS_PORT}`;
     return axios.post(`${url}/cursos/${idCurso}/${idPost}/${idComment}/editcomment`,comment,{headers: { Cookie: `token=${token}` }});
 }
+
+module.exports.removeAluno = (token,idCurso,aluno) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.delete(`${url}/cursos/${idCurso}/removealuno`,{params:{aluno},headers: { Cookie: `token=${token}` }});
+}
+
