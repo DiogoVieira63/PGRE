@@ -11,7 +11,7 @@ block content
 			.modal.w3-display-middle(id="filtros" style="max-width: 1000px; margin: 15vh auto; position: fixed;")
 				span.w3-button.w3-red.w3-xlarge.w3-display-topright(onclick="closeEditModal('filtros')")
 					i.w3-xlarge.fa.fa-times
-				.w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+				.w3-content.w3-padding.w3-margin-top.w3-white
 					h2.w3-center Aplicar Filtros
 					//- form.w3-form(action='/cursos', method='POST')
 					.w3-container
@@ -27,9 +27,6 @@ block content
 							input.w3-radio(type='radio', name='visibilidade' value='privado' onchange='applyFilters()')
 							label(for="privado") Privado
 							p 
-							input.w3-radio(type='radio', name='visibilidade' value='convite' onchange='applyFilters()')
-							label(for="convite") Convite        
-							div
 						div
 							h4
 								b Inscrito

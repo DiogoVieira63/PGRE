@@ -160,3 +160,24 @@ module.exports.getCertainPedido = (curso, token) => {
     return axios.get(`${url}/noticias/getpedido`,{params:{curso},headers: { Cookie: `token=${token}` }});
 }
 
+module.exports.getPedidos = (token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/noticias/pedidos`,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.respostaPedido = (pedido,body,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/noticias/pedidos/${pedido}/resposta`,body,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.addNotificacao = (body,token) => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.post(`${url}/noticias/notificacoes`,body,{headers: { Cookie: `token=${token}` }});
+}
+
+module.exports.getUniversidades = () => {
+    let url = `http://localhost:${process.env.DADOS_PORT}`;
+    return axios.get(`${url}/universidades`);
+}
+
+

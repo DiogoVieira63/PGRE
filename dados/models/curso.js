@@ -22,7 +22,8 @@ const cursoSchema = new mongoose.Schema({
     "alunos": Array,
     "posts": [postSchema],
     "visibilidade": String,
-    "regente": String
+    "regente": String,
+    "estado": Boolean
 })
 
 

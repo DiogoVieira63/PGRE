@@ -1,0 +1,23 @@
+
+
+block pedidos
+  each pedido in noticia.pedido 
+  .w3-container
+    - var border_color = pedido.respondido ? (pedido.aceite ? "green" : "red") : "amber"
+    .w3-panel.w3-bottombar.w3-border.w3-display-container(class=`w3-border-${border_color}`)
+        p   
+          b Descrição: 
+          | #{pedido.info}
+        p   
+          b Pedido de: 
+          | #{pedido.feitoPor}
+        if pedido.respondido == false 
+          p.w3-center
+            form(action=`/cursos/${pedido.curso}/entrar/cancelar` method="POST" style="display: inline-block;")
+              input(type="hidden" name="_id" value=pedido._id)
+              input(type="hidden" name="feitoPor" value=pedido.feitoPor)
+              button.w3-button.w3-red.w3-round.w3-margin(type="submit") Cancelar
+            form(action=`/cursos/${pedido.curso}/entrar/confirmar` method="POST" style="display: inline-block;")
+              input(type="hidden" name="_id" value=pedido._id)
+              input(type="hidden" name="feitoPor" value=pedido.feitoPor)
+              button.w3-button.w3-green.w3-round.w3-margin(type="submit") Aceitar

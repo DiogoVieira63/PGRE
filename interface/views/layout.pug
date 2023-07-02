@@ -17,9 +17,10 @@ html
           a.w3-bar-item.w3-button(href="/") 
             i.fa.fa-home 
             .w3-text.w3-medium Página Inicial
-          a.w3-bar-item.w3-button(href="/cursos")
-            i.fa.fa-book
-            .w3.text.w3-medium Pesquisar Cursos
+          if noticia && noticia.level != 'admin'
+            a.w3-bar-item.w3-button(href="/cursos")
+              i.fa.fa-book
+              .w3.text.w3-medium Pesquisar Cursos
           a.w3-bar-item.w3-button.w3-right(href="/loggout")
             i.fa.fa-sign-out
             .w3.text.w3-medium Terminar sessão
@@ -33,8 +34,11 @@ html
             else 
               i.fa.fa-bell
               .w3.text.w3-medium Notificações
-            div#notificacoes.w3-dropdown-content.w3-bar-block.w3-border(style="width:500px; position: absolute; right: 16px; font-size: 15px;")
-              if noticia
+          div#notificacoes.w3-dropdown-content.w3-bar-block.w3-border(style="width:500px; position: absolute; right: 16px;top: 75px; font-size: 15px;")
+            button.w3-button.w3-half.w3-border.w3-border-red.Button-Tab(id="button_not",onclick="openTab('Notificacoes_Tab','button_not',false)") Notificações
+            button.w3-button.w3-half.w3-border.Button-Tab(id="button_pedidos",onclick="openTab('Pedidos','button_pedidos',false)") Pedidos
+            if noticia
+              .w3-container.Tab(id="Pedidos", style="display: none;")
                 each pedido in noticia.pedido 
                   if pedido.respondido == false 
                     .w3-container
@@ -45,7 +49,6 @@ html
                           p   
                             b Pedido de: 
                             | #{pedido.feitoPor}
-                          
                           p.w3-center
                             form(action=`/cursos/${pedido.curso}/entrar/cancelar` method="POST" style="display: inline-block;")
                               input(type="hidden" name="_id" value=pedido._id)
@@ -55,7 +58,7 @@ html
                               input(type="hidden" name="_id" value=pedido._id)
                               input(type="hidden" name="feitoPor" value=pedido.feitoPor)
                               button.w3-button.w3-green.w3-round.w3-margin(type="submit") Aceitar
-
+              .w3-container.Tab(id="Notificacoes_Tab")
                 each not in noticia.notificacao 
                   if not.lida == false
                    .w3-container(onmouseenter=`markAsRead('${noticia.username}','${not._id}','${noticia.porta}')`)
@@ -67,6 +70,7 @@ html
                             p.w3-center
                                 a.w3-button.w3-grey.w3-round(href=not.link) Mostrar
               p.w3-center
-                a.w3-button.w3-grey.w3-round(href=`/notificacoes`) Mostrar todas           
+                a.w3-button.w3-grey.w3-round(href=`/noticias`) Mostrar todas           
 
     block content
+

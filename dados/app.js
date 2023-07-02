@@ -55,12 +55,15 @@ var metaFilesRouter = require("./routes/metaFiles");
 var metaTypesRouter = require("./routes/metaTypes.js");
 var cursosRouter = require("./routes/cursos");
 var noticiasRouter = require("./routes/noticias");
+var universidadeRouter = require("./routes/universidade");
+
 
 
 app.use("/meta/files", metaFilesRouter);
 app.use("/meta/types", metaTypesRouter);
 app.use('/cursos',cursosRouter);
 app.use('/noticias',noticiasRouter);
+app.use('/universidades',universidadeRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

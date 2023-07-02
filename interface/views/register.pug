@@ -36,15 +36,24 @@ block content
           div#instituicao(style='display:none').w3-margin-top
             label(for='instituicao') 
               b Instituição
-              select.w3-select(name='universidade')
+              select.w3-select(name='universidade', onchange='showDepartamento(this.value)')
+                - let first = true;
                 each instituicao in instituicoes
-                  option(value=instituicao) #{instituicao}
-          div#departamento(style='display:none').w3-margin-top
-            label(for='departamento') 
-              b Instituição
-              select.w3-select(name='departamento')
-                each departamento in departamentos 
-                  option(value=departamento) #{departamento}
+                  if first
+                    option(value=instituicao.nome, selected='selected') #{instituicao.nome}
+                    - first = false;
+                  else
+                    option(value=instituicao.nome) #{instituicao.nome}
+              - let display = 'block';
+              - let dep = "departamento_final";
+              each instituicao in instituicoes
+                .Departamento(id=instituicao.nome,style=`display:${display}`).w3-margin-top
+                  label(for='departamento') 
+                    select.w3-select(name=dep)
+                      each departamento in instituicao.departamentos
+                        option(value=departamento) #{departamento}
+                - display = 'none';
+                - dep = "departamento";
       div
         input.w3-input(type='submit', value='Registar').w3-button.w3-blue.w3-margin-top
 
@@ -58,4 +67,13 @@ block content
         document.getElementById("departamento").style.display = "none";
       }
     }
-  
+    function showDepartamento(id) {
+      console.log("Id",id);
+      for (var i = 0; i < document.getElementsByClassName("Departamento").length; i++) {
+        document.getElementsByClassName("Departamento")[i].style.display = "none";
+      }
+      document.getElementById(id).style.display = "block";
+      // change select name to departamento
+      document.getElementById(id).getElementsByTagName("select")[0].setAttribute("name", "departamento_final"); 
+
+    }

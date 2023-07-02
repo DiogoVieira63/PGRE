@@ -5,12 +5,13 @@ var Curso = require('../models/curso');
 
     
 // create a new curso
-module.exports.insert = (curso,username) => {
+module.exports.insert = (curso,username,estado) => {
     console.log(curso);
     curso["professores"] = [username];
     curso['regente'] = username;
     curso['alunos'] = [];
     curso['posts'] = [];
+    curso['estado'] = estado;
     console.log(curso);
     return Curso.create(curso).then(curso => {
         return curso;
@@ -58,7 +59,7 @@ module.exports.findByProfessor = (username) => {
 
 // find all cursos
 module.exports.getAll = () => {
-    return Curso.find().then(curso => {
+    return Curso.find({estado: true}).then(curso => {
         return curso;
     }).catch(err => {
         return err;
@@ -185,8 +186,7 @@ module.exports.hasPermissionCurso = (id, idCurso,level) =>{
         });
     }
     else {
-        console.log("Admin - true");
-        return true;
+        return Promise.resolve(true);
     }
 }
 
@@ -252,6 +252,18 @@ module.exports.getOnePost = (curso, post) => {
         return err;
     });
 }
+
+module.exports.aprovarCurso = (idcurso) => {
+    return Curso.findOneAndUpdate(
+        {_id: idcurso},
+        {$set: {estado: true}}
+    ).then(curso => {
+        return curso;
+    }).catch(err => {
+        return err;
+    });
+}
+
 
 /*
 module.exports.getOne = (id) => {

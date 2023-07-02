@@ -1,0 +1,22 @@
+doctype html
+html
+  head
+    title PGRE 
+    meta(charset='utf-8')
+    link(rel='stylesheet', href='/stylesheets/w3.css')
+    script(src='/javascripts/jquery-3.6.4.min.js')
+    script(src='/javascripts/jquery.modal.min.js')  
+    link(rel='stylesheet', href='/stylesheets/jquery.modal.min.css')
+    script(src='/javascripts/fileManager.js')
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css")
+    script(src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js")
+
+  body.w3-light-grey
+    .w3-bar.w3-border.w3-light-grey.w3-xlarge
+        a.w3-bar-item.w3-button(href="/") 
+          i.fa.fa-home 
+          .w3-text.w3-medium Página Inicial
+        
+
+    block content
+

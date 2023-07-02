@@ -1,0 +1,76 @@
+extends layout
+
+block content
+    .w3-container.w3-content
+    .w3-card-4
+        header.w3-indigo
+            h2.w3-margin-left Notificações
+        .w3-container
+            button.w3-button.w3-half.w3-border.w3-border-red.PageButton-Tab(id="button_page_not",onclick="openTab('Notificacoes_Page','button_page_not',true)") Notificações
+            button.w3-button.w3-half.w3-border.PageButton-Tab(id="button_page_pedidos",onclick="openTab('Pedidos_Page','button_page_pedidos',true)") Pedidos
+            .w3-container.PageTab(id="Pedidos_Page", style="display: none;")
+              each pedido in noticia.pedido 
+                .w3-container
+                  - var border_color = pedido.respondido ? (pedido.aceite ? "green" : "red") : "amber"
+                  .w3-panel.w3-bottombar.w3-border.w3-display-container(class=`w3-border-${border_color}`)
+                      p   
+                        b Descrição: 
+                        | #{pedido.info}
+                      p   
+                        b Pedido de: 
+                        | #{pedido.feitoPor}
+                      if pedido.respondido == false 
+                        p.w3-center
+                          form(action=`/pedidos/${pedido._id}/` method="POST" style="display: inline-block;")
+                            input(type="hidden" name="resposta" value="false")
+                            button.w3-button.w3-red.w3-round.w3-margin(type="submit") Cancelar
+                          form(action=`/pedidos/${pedido._id}/` method="POST" style="display: inline-block;")
+                            input(type="hidden" name="resposta" value="true")
+                            button.w3-button.w3-green.w3-round.w3-margin(type="submit") Aceitar
+
+                      //-       else 
+                      //- .w3-container
+                      //-     if pedido.aceite
+                      //-         .w3-panel.w3-bottombar.w3-border-green.w3-border.w3-display-container
+                      //-             p   
+                      //-               b Descrição: 
+                      //-               | #{pedido.info}
+                      //-             p   
+                      //-               b Pedido de: 
+                      //-               | #{pedido.feitoPor}
+                      //-             p 
+                      //-               b Aceite: 
+                      //-               i.w3-green.w3-xlarge.fa.fa-check
+                      //-     else
+                      //-         .w3-panel.w3-bottombar.w3-border-red.w3-border.w3-display-container
+                      //-             p   
+                      //-               b Descrição: 
+                      //-               | #{pedido.info}
+                      //-             p   
+                      //-               b Pedido de: 
+                      //-               | #{pedido.feitoPor}
+                      //-             p 
+                      //-               b Aceite: 
+                      //-               i.w3-red.w3-xlarge.fa.fa-times
+            
+            .w3-container.PageTab(id="Notificacoes_Page")
+              each notificacao in noticia.notificacao
+                  if notificacao.lida 
+                      .w3-container
+                          .w3-panel.w3-bottombar.w3-border-green.w3-border.w3-display-container 
+                              p   
+                                  b Descrição: 
+                                  | #{notificacao.descricao}
+                              if notificacao.link
+                                  p.w3-center
+                                      a.w3-button.w3-grey.w3-round(href=notificacao.link) Mostrar
+                  else 
+                      .w3-container(onmouseenter=`markAsRead('${noticia.username}','_${notificacao._id}','${noticia.porta}')`)
+                          .w3-panel.w3-bottombar.w3-border-red.w3-border.w3-display-container(id=`_${notificacao._id}`)
+                              p   
+                                  b Descrição: 
+                                  | #{notificacao.descricao}
+
+                              if notificacao.link
+                                  p.w3-center
+                                      a.w3-button.w3-grey.w3-round(href=notificacao.link) Mostrar 

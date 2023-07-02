@@ -54,13 +54,15 @@ router.get("/meuscursos",verifyJWT,function (req, res) {
             res.status(500).jsonp({error: err});
         });
     }
-    // Curso.getAll().then((data) => {
-    //     console.log("Cursos",data);  
-    //     res.jsonp(data);
-    // }).catch((err) => {
-    //     console.log(err);
-    //     res.status(500).jsonp({error: err});
-    // });
+    else {
+        Curso.getAll().then((data) => {
+            console.log("Cursos",data);  
+            res.jsonp(data);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).jsonp({error: err});
+        });
+}
 });
 
 router.get("/profile",verifyJWT,function (req, res, nxt) {
@@ -117,7 +119,6 @@ router.post("/:curso/addpost",verifyJWT/*,verifyProfessor*/,function (req, res, 
     console.log("BODY:",req.body)
     Curso.addPost(cursoId,post)
     .then((curso) => {
-        
         Curso.getOne(cursoId).then((curso) => {
             post = curso.posts[curso.posts.length-1];
             let notificacao = {
@@ -153,10 +154,24 @@ router.get("/:curso",verifyJWT,verifyCourse,function (req, res) {
 
 router.post("/create",verifyJWT,/*verifyProfessor,*/function (req, res, nxt) {
     var curso = req.body.curso;
-    Curso.insert(curso,req.user.username)
+    var estado = req.user.level == "professor" ? false : true;
+    Curso.insert(curso,req.user.username,estado)
     .then((curso) => {
-        
-        res.status(201).jsonp(curso);
+        let pedido = {
+            "tipo": 'criarCurso',
+            "feitoPor": req.user.username,
+            "info": `O utilzador ${req.user.username} pediu para criar o curso ${curso.nome}`,
+            "respondido": false,
+            "aceite":false,
+            "curso": curso._id
+        }
+        Noticia.insertPedido("admin@admin.pt", pedido).then((notificacao) => {
+            console.log("Notificacao(Pedido) adicionada com sucesso");
+            res.status(201).jsonp(curso);
+        }).catch((err) => {
+            console.log(err);
+            res.status(500).jsonp({error: err});
+        })
     }).catch((err) => {
         res.status(500).jsonp({error: err});
     });

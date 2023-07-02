@@ -32,6 +32,7 @@ function course(req, res, next) {
   console.log("User",req.user,req.params)
   Curso.hasPermissionCurso(id, curso, level)
     .then((hasPermission) => {
+      console.log("hasPermission",hasPermission)
       req.permission = hasPermission;
       next();
     })

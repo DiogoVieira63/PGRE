@@ -72,3 +72,34 @@ module.exports.getCertainPedido = (username, curso) => {
             return err;
         })
 }
+
+module.exports.getPedidos = (username, curso) => {
+    return Noticia.find({ 'pedido.curso': curso, 'pedido.feitoPor': username , 'pedido.respondido':false }).then((noticia) => {
+        return noticia;
+    }).catch((err) => {
+        return err;
+    });
+}
+
+module.exports.getOnePedido = (username,id) => {
+    console.log(username,id);
+    return Noticia.findOne({ username: username, 'pedido._id': id },{ 'pedido.$': 1 }).then((noticia) => {
+        return noticia.pedido[0];
+    }).catch((err) => {
+
+        return err;
+    });
+}
+
+module.exports.notifyAll = (notificacao) => {
+    console.log(notificacao);
+    return Noticia.updateMany({username: {$not: /admin@admin.pt/ }}, { $push: { notificacao: notificacao } })
+        .then(noticia => {
+            console.log(noticia);
+            return noticia;
+        })
+        .catch(err => {
+            console.log(err);
+            return err;
+        })
+}

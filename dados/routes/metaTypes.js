@@ -27,6 +27,8 @@ router.post("/",verifyJWT,verifyProfessor, function (req, res, nxt){
   });
 });    
 
+
+
 // get all types
 router.get("/",verifyJWT, function (req, res, nxt){
   console.log("Get all types");

@@ -1,6 +1,6 @@
-extends layout
+extends layout_erro
 
 block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+  .w3-card-4.w3-border.w3-border-red.w3-content.w3-padding.w3-margin-top.w3-white
+    h3.w3-center.w3-red Erro
+    p.w3-center #{error}

@@ -1,11 +1,10 @@
 extends layout
 
 block content
-    .w3-container.w3-content
     .w3-card-4
         header.w3-indigo(style="padding: 10px 0;")
             h2.w3-margin-left(style="display: inline")=titulo
-                if user.level == 'professor'
+                if user.level != 'aluno'
                     span
                         a.w3-circle.w3-button(href=`/cursos/form`)
                             i.fa.fa-plus
@@ -16,7 +15,7 @@ block content
             .modal.w3-display-middle(id="filtros" style="max-width: 1000px; margin: 15vh auto; position: fixed;")
                 span.w3-button.w3-red.w3-xlarge.w3-display-topright(onclick="closeEditModal('filtros')")
                     i.w3-xlarge.fa.fa-times
-                .w3-card-4.w3-content.w3-padding.w3-margin-top.w3-white
+                .w3-content.w3-padding.w3-margin-top.w3-white
                     h2.w3-center Aplicar Filtros
                     //- form.w3-form(action='/cursos', method='POST')
                     .w3-container
@@ -32,9 +31,6 @@ block content
                             input.w3-radio(type='radio', name='visibilidade' value='privado' onchange='applyFiltersMaintainNextRow()')
                             label(for="privado") Privado
                             p 
-                            input.w3-radio(type='radio', name='visibilidade' value='convite' onchange='applyFiltersMaintainNextRow()')
-                            label(for="convite") Convite        
-                            div
 
         .w3-container
             table#meusCursos.w3-table.w3-bordered
@@ -75,3 +71,8 @@ block content
                 
         footer.w3-indigo
             address Generated in RPCW :: #{data}
+    if user.level == 'admin'
+        .w3-content.w3-center.w3-margin-top
+            button.w3-button.w3-amber.w3-round
+                a(href='/notificacao/form') Criar Notificação
+    

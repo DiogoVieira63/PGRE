@@ -76,6 +76,10 @@ function checkLoggin(req, res, next) {
         }
       }
       req.pedidosNaoRespondidos = pedidosNaoRespondidos;
+      req.noticias.level = req.user.level;
+      
+      console.log("LEVEL",req.noticias.level)
+
 
       console.log("PEDIDOS CHECKLOGIN: ", req.pedidosNaoRespondidos)
       console.log(req.noticias.pedido)
@@ -116,7 +120,7 @@ router.get('/cursos/:curso/files/upload', checkLoggin, function (req, res, next)
       res.render('fileForm', { curso: req.params.curso, types: dados.data, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias });
     }).catch(err =>
       res.render('error', {
-        error: err
+        error: err.message
       }));
 });
 
@@ -141,7 +145,7 @@ router.post('/cursos/:id/posts/:idpost/comentar/remover', checkLoggin, function 
       .then(dados => {
         res.redirect(`/cursos/${idCurso}/posts/${idPost}`);
       }).catch(err => 
-        res.render('error', {error: err
+        res.render('error', {error: err.message
         }));
   }
 
@@ -158,7 +162,7 @@ router.post('/cursos/:id/posts/:idpost/comentar/editar', checkLoggin, function (
       .then(dados => {
         res.redirect(`/cursos/${idCurso}/posts/${idPost}`);
       }).catch(err => 
-        res.render('error', {error: err
+        res.render('error', {error: err.message
         }));
   }
 
@@ -187,7 +191,7 @@ router.post('/cursos/:id/posts/:idpost/comentar', checkLoggin, function (req, re
     .then(dados => {
       res.redirect(`/cursos/${idCurso}/posts/${idPost}`);
     }).catch(err => 
-      res.render('error', {error: err
+      res.render('error', {error: err.message
       }));
 
 });
@@ -209,10 +213,10 @@ router.get('/cursos/:id/posts/:idpost', checkLoggin, function (req, res, next) {
 
       }
       ).catch(err => {
-        res.status(500).jsonp({ error: err });
+        res.render("error",{ error: err.message });
       });
     })
-    .catch(err => res.render('error', { error: err }));
+    .catch(err => res.render('error', { error: err.message }));
 });
 
 router.get('/cursos/:id/addpost', checkLoggin, function (req, res, next) {
@@ -229,7 +233,7 @@ router.post('/cursos/:curso/files/:idFile/rate', checkLoggin, function (req, res
       res.redirect('/cursos/' + req.params.curso);
       //res.jsonp(dados.data);
     }).catch(err => {
-      res.status(500).jsonp({ error: err });
+      res.render("error",{ error: err.message });
     });
   }
   else {
@@ -239,7 +243,7 @@ router.post('/cursos/:curso/files/:idFile/rate', checkLoggin, function (req, res
       res.redirect('/cursos/' + req.params.curso);
       //res.jsonp(dados.data);
     }).catch(err => {
-      res.status(500).jsonp({ error: err });
+      res.render("error",{ error: err.message });
     });
   }
 });
@@ -251,7 +255,7 @@ router.post('/cursos/:curso/files/:idFile/rate/edit', checkLoggin, function (req
       res.redirect('/cursos/' + req.params.curso);
       //res.jsonp(dados.data);
     }).catch(err => {
-      res.status(500).jsonp({ error: err });
+      res.render("error",{ error: err.message });
     });
   }
   else {
@@ -261,7 +265,7 @@ router.post('/cursos/:curso/files/:idFile/rate/edit', checkLoggin, function (req
       res.redirect('/cursos/' + req.params.curso);
       //res.jsonp(dados.data);
     }).catch(err => {
-      res.status(500).jsonp({ error: err });
+      res.render("error",{ error: err.message });
     });
   }
 
@@ -273,20 +277,24 @@ router.get('/cursos', checkLoggin, function (req, res, next) {
     .then(dados => {
       let data = dados.data;
       for (var i = 0; i < data.length; i++) {
-        let array = getArrayLevel(req.user, data[i]);
-        if (array.includes(req.user.username)) {
+        if (req.user.level != 'admin') {
+          let array = getArrayLevel(req.user, data[i]);
+          if (array.includes(req.user.username)) {
+            data[i].isInscrito = true;
+          }
+          else {
+            data[i].isInscrito = false;
+          }
+        }
+        else
           data[i].isInscrito = true;
-        }
-        else {
-          data[i].isInscrito = false;
-        }
       }
       date = new Date().toISOString().substring(0, 16)
       dados.data.sort((a, b) => a.nome.localeCompare(b.nome));
 
       res.render('listacursos', { cursos: dados.data, data: date, titulo: "Lista de Cursos", nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias });
     })
-    .catch(err => res.render('error', { error: err }));
+    .catch(err => res.render('error', { error: err.message }));
 });
 
 
@@ -296,7 +304,7 @@ router.get('/meuscursos', checkLoggin, function (req, res, next) {
       data = new Date().toISOString().substring(0, 16)
       res.render('listacursos', { cursos: dados.data, data: data, titulo: "Meus Cursos", nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias });
     })
-    .catch(err => res.render('error', { error: err }));
+    .catch(err => res.render('error', { error: err.message }));
 });
 
 
@@ -309,9 +317,9 @@ router.get('/cursos/:id/edit', checkLoggin, function (req, res, next) {
         let vis = ["privado", "publico", "convite"];
         res.render('editcurso', { curso: dados.data.curso, options: { visibility: vis }, profs: nomes.data, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias })
       })
-        .catch(err => res.render('error', { error: err }));
+        .catch(err => res.render('error', { error: err.message }));
     })
-    .catch(err => res.render('error', { error: err }));
+    .catch(err => res.render('error', { error: err.message }));
 });
 
 router.get('/cursos/:id/alunos', checkLoggin, function (req, res, next) {
@@ -324,10 +332,10 @@ router.get('/cursos/:id/alunos', checkLoggin, function (req, res, next) {
         nomes.data.sort((a, b) => a.name.localeCompare(b.name));
         res.render('alunos', { curso: dados.data.curso, alunos: nomes.data, data: data, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias , user:req.user})
       })
-        .catch(err => res.render('error', { error: err }));
+        .catch(err => res.render('error', { error: err.message }));
 
     })
-    .catch(err => res.render('error', { error: err }));
+    .catch(err => res.render('error', { error: err.message }));
 });
 
 router.post('/cursos/:id/alunos/remover', checkLoggin, function (req, res, next) {
@@ -343,7 +351,7 @@ router.post('/cursos/:id/alunos/remover', checkLoggin, function (req, res, next)
       .then(dados => {
         res.redirect(`/cursos/${idCurso}/`);
       }).catch(err => 
-        res.render('error', {error: err
+        res.render('error', {error: err.message
         }));
   }
 
@@ -391,17 +399,17 @@ router.get('/cursos/:id', checkLoggin, function (req, res, next) {
                 nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias, pedido:check_pedido
               })
             }).catch(err => 
-              res.render('error', {error: err
+              res.render('error', {error: err.message
             }));
 
             
           })
-            .catch(err => res.render('error', { error: err }));
+            .catch(err => res.render('error', { error: err.message }));
 
         })
-        .catch(err => res.render('error', { error: err }));
+        .catch(err => res.render('error', { error: err.message }));
     })
-    .catch(err => res.render('error', { error: err }));
+    .catch(err => res.render('error', { error: err.message }));
 });
 
 router.post('/cursos', checkLoggin, function (req, res, next) {
@@ -409,7 +417,7 @@ router.post('/cursos', checkLoggin, function (req, res, next) {
     res.redirect('/cursos');
   }
   ).catch(err => {
-    res.status(500).jsonp({ error: err });
+    res.render('error', { error: err.message });
   });
 });
 
@@ -422,7 +430,7 @@ router.post('/cursos/:id/edit', checkLoggin, function (req, res, next) {
     //res.jsonp(dados.data);
   }
   ).catch(err => {
-    res.status(500).jsonp({ error: err });
+    res.render('error', { error: err.message });
   });
 });
 
@@ -436,7 +444,7 @@ router.post('/cursos/:id/entrar/:acao', checkLoggin, function (req, res, next) {
       //res.jsonp(dados.data);
     }
     ).catch(err => {
-      res.status(500).jsonp({ error: err });
+      res.render('error', { error: err.message });
     });
   }
   else if (req.params.acao == "cancelar") {
@@ -445,7 +453,7 @@ router.post('/cursos/:id/entrar/:acao', checkLoggin, function (req, res, next) {
       //res.jsonp(dados.data);
     }
     ).catch(err => {
-      res.status(500).jsonp({ error: err });
+      res.render('error', { error: err.message });
     });
   }
 
@@ -458,7 +466,7 @@ router.post('/cursos/:id/entrar', checkLoggin, function (req, res, next) {
     //res.jsonp(dados.data);
   }
   ).catch(err => {
-    res.status(500).jsonp({ error: err });
+    res.render('error', { error: err.message });
   });
 });
 
@@ -470,7 +478,7 @@ router.get('/download/:filename', checkLoggin, function (req, res) {
   Dados.getOneDownload(req.params.filename, req.cookies['token']).then(dados => {
     res.download(__dirname + "/../public/fileStore/" + req.params.filename, dados.data.meta.name);
   }).catch(err => {
-    res.status(500).jsonp({ error: err });
+    res.render('error', { error: err.message });
   });
 });
 
@@ -481,7 +489,7 @@ router.post('/files', checkLoggin, upload.single("file"), function (req, res, ne
     res.redirect('/');
   }
   ).catch(err => {
-    res.render('error', { error: err });
+    res.render('error', { error: err.message });
     // res.status(500).jsonp({error: err});
   });
 });
@@ -495,12 +503,12 @@ router.get('/files/:id', checkLoggin, function (req, res, next) {
     Auth.getNames([dados.data.meta.uploadBy], req.cookies['token']).then(nomes => {
       res.render('file', { nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias, file: dados.data.meta, profs: nomes.data });
     })
-      .catch(err => res.render('error', { error: err }));
+      .catch(err => res.render('error', { error: err.message   }));
 
 
   }
   ).catch(err => {
-    res.status(500).jsonp({ error: err });
+    res.render('error', { error: err.message });
   });
 });
 
@@ -513,8 +521,26 @@ router.get('/posts', checkLoggin, function (req, res, next) {
     res.redirect('/cursos/' + req.body.course);
   }
   ).catch(err => {
-    res.render('error', { error: err });
+    res.render('error', { error: err.message });
     // res.status(500).jsonp({error: err});
+  });
+});
+
+
+// PEDIDOS
+
+router.get('/pedidos', checkLoggin, function (req, res, next) {
+  let cookie = req.cookies['token'];
+  res.render('pedidos', { nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias });
+});
+
+
+router.post('/pedidos/:id/', checkLoggin, function (req, res, next) {
+  let cookie = req.cookies['token'];
+  Dados.respostaPedido(req.params.id, req.body, cookie).then(dados => {
+    res.redirect('/noticias');
+  }).catch(err => {
+    res.render('error', { error: err.message });
   });
 });
 
@@ -528,21 +554,28 @@ router.get('/no_login', function (req, res, next) {
 
 router.get('/register', function (req, res, next) {
   // TODO : Universidades disponiveis
-  let universidades = ["Universidade do Minho", "Universidade do Porto", "Universidade de Lisboa"];
-  let departamentos = ["Departamento de Informática", "Departamento de Física", "Departamento de Matemática"];
-  res.render('register', { instituicoes: universidades, departamentos: departamentos, no_bar: true });
+  Dados.getUniversidades().then(dados => {
+    console.log("UNI: ", dados.data.universidades)
+    let universidades = ["Universidade do Minho", "Universidade do Porto", "Universidade de Lisboa"];
+    let departamentos = ["Departamento de Informática", "Departamento de Física", "Departamento de Matemática"];
+    res.render('register', { instituicoes: dados.data.universidades, no_bar: true });
+  }).catch(err => {
+    res.render('error', { error: err.message });
+  });
 });
 
 router.post('/register', function (req, res, next) {
+  console.log("BODY: ", req.body);
+  req.body.departamento = req.body.departamento_final;
   Auth.register(req.body).then(dados => {
     Dados.register(req.body.email).then(dados => {
       res.redirect('/');
     }).catch(err => {
-      res.render('error', { error: err });
+      res.render('error', { error: err.message });
     });
   }
   ).catch(err => {
-    res.render('error', { error: err });
+    res.render('error', { error: err.message });
   });
 });
 
@@ -560,7 +593,7 @@ router.post('/login', function (req, res, next) {
     res.redirect('/');
   }
   ).catch(err => {
-    res.status(500).jsonp({ error: err });
+    res.render('error', { error: "Username ou palavra-passe inválidas." });
   });
 });
 
@@ -579,7 +612,7 @@ router.get('/user/:id', checkLoggin, function (req, res, next) {
     res.jsonp(dados.data, { nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias });
   }
   ).catch(err => {
-    res.status(500).jsonp({ error: err });
+    res.status(500).jsonp({ error: err.message });
   });
 });
 
@@ -595,7 +628,7 @@ router.get('/users/:id', checkLoggin, function (req, res, next) {
         console.log("CURSOS BY ID: ", cursos.data)
         res.render('profile', { user: dados.data, cursos: cursos.data, profile: req.user.username, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos, noticia: req.noticias });
       })
-      .catch(err => res.render('error', { error: err }));
+      .catch(err => res.render('error', { error: err.message }));
 
     // res.render('profile', {user: dados.data, cursos: [], profile:req.user.username, nao_lidas: req.notificacoesNaoLidas, noticia: req.noticias});
   }
@@ -614,7 +647,7 @@ router.get('/profile', checkLoggin, function (req, res, next) {
     });
   }
   ).catch(err => {
-    res.render('error', { error: err });
+    res.render('error', { error: err.message });
   });
 });
 
@@ -629,7 +662,7 @@ router.get('/profile/edit', checkLoggin, function (req, res, next) {
     });
   }
   ).catch(err => {
-    res.render('error', { error: err });
+    res.render('error', { error: err.message });
   });
 });
 
@@ -641,13 +674,30 @@ router.post('/profile/edit', function (req, res, next) {
     res.redirect('/profile');
   }
   ).catch(err => {
-    res.render('error', { error: err });
+    res.render('error', { error: err.message });
   });
 });
 
-router.get('/notificacoes', checkLoggin, function (req, res, next) {
-  res.render('notificacoes', { noticia: req.noticias });
+router.get('/noticias', checkLoggin, function (req, res, next) {
+  res.render('noticias', { noticia: req.noticias, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos });
 });
+
+
+router.get('/notificacao/form', checkLoggin, function (req, res, next) {
+  res.render('notificacaoForm', { noticia: req.noticias, nao_lidas: req.notificacoesNaoLidas + req.pedidosNaoRespondidos })
+});
+
+
+router.post('/notificacao', checkLoggin, function (req, res, next) {
+  let cookie = req.cookies['token'];
+  Dados.addNotificacao(req.body, cookie).then(dados => {
+    console.log("Notificação adicionada com sucesso");
+    res.redirect('/');
+  }).catch(err => {
+    res.render('error', { error: err.message });
+  });
+});
+
 
 
 

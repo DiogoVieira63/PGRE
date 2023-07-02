@@ -58,13 +58,40 @@ function toggleAccordion(id){
 }
 
 function dropdown(id) {
+  console.log("Inside dropdown", id);
   var x = document.getElementById(id);
   if (x.className.indexOf("w3-show") == -1) { 
+    //x.style.display = "block";
     x.className += " w3-show";
-  } else {
+  } 
+  else {
+    //x.style.display = "none";
     x.className = x.className.replace(" w3-show", "");
   }
 }
+
+function openTab(tab,button,isPage) {
+  var tabName = isPage ? "PageTab" : "Tab";
+  var buttonName = isPage ? "PageButton-Tab" : "Button-Tab";
+
+  console.log("Inside openTab", tab);
+  var i;
+  var x = document.getElementsByClassName(tabName);
+  for(i = 0; i < x.length; i++) {
+    x[i].style.display = "none";
+    console.log(x[i]);
+  }
+  var x = document.getElementsByClassName(buttonName);
+  for(i = 0; i < x.length; i++){
+    x[i].classList.remove("w3-border-red");
+    console.log(x[i]);
+  }
+  document.getElementById(button).classList.add("w3-border-red");
+
+  var elem = document.getElementById(tab);
+  elem.style.display = "block";
+}
+
 
 function searchTable(inputId, tableId) {
   var input, filter, table, tr, td, i, txtValue;
@@ -150,6 +177,8 @@ function applyFilters() {
     }
   });
 }
+
+
 
 function applyFiltersMaintainNextRow() {
   var table = document.getElementById("meusCursos");
