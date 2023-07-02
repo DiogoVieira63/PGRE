@@ -1,0 +1,57 @@
+version: '3'
+
+services:
+  interface:
+    container_name: interface
+    build: ./interface
+    restart: always
+    environment:
+      - MONGODB_URL=mongodb://mongodb/PGRE
+    ports:
+      - '8888:15016'
+    depends_on:
+      - mongodb
+    networks:
+      - pgre-network
+  
+  dados:
+    container_name: dados
+    build: ./dados
+    restart: always
+    environment:
+      - MONGODB_URL=mongodb://mongodb/PGRE
+    # ports:
+    #   - '15016:13000'
+    depends_on:
+      - mongodb
+    networks:
+      - pgre-network
+  
+  authserver:
+    container_name: authserver
+    build: ./authServer
+    restart: always
+    environment:
+      - MONGODB_URL=mongodb://mongodb/PGRE
+    # ports:
+    #   - '15016:3000'
+    depends_on:
+      - mongodb
+    networks:
+      - pgre-network
+
+  mongodb:
+    container_name: pgre-mongodb
+    image: mongo
+    restart: always
+    volumes:
+      - './dbdata:/data/db'
+    networks:
+      - pgre-network
+
+volumes:
+  dbdata:
+
+networks:
+  pgre-network:
+    driver: bridge
