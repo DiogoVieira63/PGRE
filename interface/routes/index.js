@@ -516,7 +516,7 @@ router.get('/files/:id', checkLoggin, function (req, res, next) {
 
 // POSTS
 
-router.get('/posts', checkLoggin, function (req, res, next) {
+router.post('/posts', checkLoggin, function (req, res, next) {
   Dados.addPost(req.body, req.user.username, req.cookies['token']).then(dados => {
     res.redirect('/cursos/' + req.body.course);
   }

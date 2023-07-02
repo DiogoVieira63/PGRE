@@ -1,0 +1,16 @@
+[
+{"_id":{"$oid":"64923e329bcf2704f2eb80da"},"id":"Tese","state":"active"},
+{"_id":{"$oid":"64923e369bcf2704f2eb80db"},"id":"Slides","state":"active"},
+{"_id":{"$oid":"64923e429bcf2704f2eb80dc"},"id":"Relatório","state":"active"},
+{"_id":{"$oid":"64923e4f9bcf2704f2eb80dd"},"id":"Artigo","state":"active"},
+{"_id":{"$oid":"64923e5c9bcf2704f2eb80de"},"id":"Aplicação","state":"active"},
+{"_id":{"$oid":"64923e6d9bcf2704f2eb80df"},"id":"Teste","state":"active"},
+{"_id":{"$oid":"64923e8e9bcf2704f2eb80e0"},"id":"Problema Resolvido","state":"active"},
+{"_id":{"$oid":"64923e959bcf2704f2eb80e1"},"id":"Livro","state":"active"},
+{"_id":{"$oid":"64923ec59bcf2704f2eb80e2"},"id":"Trabalho de Aluno","state":"active"},
+{"_id":{"$oid":"64923ed19bcf2704f2eb80e3"},"id":"Monografia","state":"active"},
+{"_id":{"$oid":"64923edf9bcf2704f2eb80e4"},"id":"Exercício","state":"active"},
+{"_id":{"$oid":"64a1e6039ea241b67e5ffd69"},"id":"Imagem","__v":0,"state":"active"},
+{"_id":{"$oid":"64a1e6989ea241b67e5ffd84"},"id":"Outro","__v":0,"state":"active"},
+{"_id":{"$oid":"64a1e6bc11ce3182b1098a6f"},"id":"Pauta","state":"active","__v":0}
+]
