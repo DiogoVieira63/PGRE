@@ -126,6 +126,25 @@ router.post("/pedidos/:id/resposta",verifyJWT, function (req, res, nxt) {
                     res.status(500).jsonp({error: err});
                 });
             }
+            else{
+                Noticia.resposta(username,id,resposta).then((noticia) => {
+                    let notificacao = {
+                        "descricao": `O seu pedido para entrar no curso ${curso.nome} foi rejeitado.`,
+                        "lida": false,
+                        "link": `/cursos/${curso._id}`,
+                    }                
+                    Noticia.insertNotificacao(user, notificacao)
+                    .then((notificacao) => {
+                        console.log("Notificacao adicionada com sucesso");
+                        res.status(201).jsonp(curso);
+                    }).catch((err) => {
+                        console.log(err);
+                        res.status(500).jsonp({error: err});
+                    });
+                }).catch((err) => {
+                    res.status(500).jsonp({error: err});
+                });
+            }
         }
         else if (pedido.tipo == 'criarCurso'){
             console.log("Criar curso", resposta);
@@ -137,14 +156,14 @@ router.post("/pedidos/:id/resposta",verifyJWT, function (req, res, nxt) {
                     console.log("Curso aprovado");
                     Noticia.resposta(username,id,resposta).then((noticia) => {
                         let notificacao = {
-                            "descricao": `O seu pedido para criar o curso ${curso.nome} foi aceite.`,
+                            "descricao": `O seu pedido para criar o curso ${data.nome} foi aceite.`,
                             "lida": false,
-                            "link": `/cursos/${curso._id}`,
+                            "link": `/cursos/${data._id}`,
                         }                
                         Noticia.insertNotificacao(user, notificacao)
                         .then((notificacao) => {
                             console.log("Notificacao adicionada com sucesso");
-                            res.status(201).jsonp(curso);
+                            res.status(201).jsonp(data);
                         }).catch((err) => {
                             console.log(err);
                             res.status(500).jsonp({error: err});
